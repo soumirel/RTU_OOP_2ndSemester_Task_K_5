@@ -142,7 +142,6 @@ void Cl_base::emitSignal(TYPE_SIGNAL signalPtr, string& message)
 	}
 	string absObjPath = this->getAbsPath();
 	this->signal_v(absObjPath, message);
-	bool isFirstSignal = true;
 	for (size_t iter = 0; iter < this->connections.size(); iter++)
 	{
 		if (this->connections.at(iter)->signalPtr == signalPtr)

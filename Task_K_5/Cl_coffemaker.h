@@ -35,8 +35,7 @@ public:
 
 	void signal_v(string path, string message) override
 	{
-		cout << message;
-		this->realizeEmit("Ready to work");
+		cout << "Take the coffe " << message << "\nReady to work\n";
 	}
 
 
@@ -44,45 +43,37 @@ public:
 	{
 		if (this->getHeadPtr()->getStatusCoffeLoad() == false)
 		{
-			if (coffeTypesNumber == -1)
-			{
-				size_t delimeterPosition = 0;
-				while ((delimeterPosition = message.find(" ")) != string::npos)
-				{
-					if (coffeTypesNumber == -1)
-					{
-						coffeTypesNumber = stoi(message.substr(0, delimeterPosition));
-					}
-					else
-					{
-						coffeTypesNames.push_back(message.substr(0, delimeterPosition));
-					}
-					message.erase(0, delimeterPosition + 1);
-				}
-				coffeTypesNames.push_back(message.substr(0, message.size() - 1));
-				this->getHeadPtr()
-
-			}
-		}
-		else
-		{
 			size_t delimeterPosition = 0;
-			string token = "";
-			while ((delimeterPosition = message.find(" ")) != string::npos) 
+			while ((delimeterPosition = message.find(" ")) != string::npos)
 			{
-				token = message.substr(0, delimeterPosition + 1);
-				if (token == "SYSTEM_COFFE")
+				if (coffeTypesNumber == -1)
 				{
-					message.erase(0, message.find(" ") + 1);
-					cout << "Take the coffe " << message << '\n';
+					coffeTypesNumber = stoi(message.substr(0, delimeterPosition));
 				}
 				else
 				{
-					return;
+					coffeTypesNames.push_back(message.substr(0, delimeterPosition));
 				}
+				message.erase(0, delimeterPosition + 1);
+			}
+			coffeTypesNames.push_back(message.substr(0, message.size() - 1));
+			this->getHeadPtr()->setStatusCoffeLoad(true);
+		}
+		else
+		{
+			string token = message.substr(0, message.find(" ") + 1);
+			if (token == "SYSTEM_COFFE")
+			{
+				message.erase(0, message.find(" ") + 1);
+				this->realizeEmit(message);
+			}
+			else
+			{
+				return;
 			}
 		}
 	}
+
 
 
 

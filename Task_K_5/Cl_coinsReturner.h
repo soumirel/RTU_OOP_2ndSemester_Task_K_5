@@ -7,7 +7,9 @@ class Cl_coinsReturner :
 	public Cl_base
 {
 private:
-	bool isSetupFinished = false;
+	//Количество десяток и пятёрок в автомате
+	size_t tennerNumber = 0;
+	size_t fiverNumber = 0;
 
 public:
 
@@ -23,8 +25,32 @@ public:
 
 	void handler_v(string path, string message) override
 	{
-		cout << '\n' << "Signal to " << path
-			<< " Text: " << message << " (class: 5)";
+		if (this->getHeadPtr()->getStatusCoffeLoad() == true
+			&& this->getHeadPtr()->getStatusCoinsLoad() == false)
+		{
+			fiverNumber = stoi(message.substr(0, message.find(" ") + 1));
+			message.erase(0, message.find(" ") + 1);
+			tennerNumber = stoi(message.substr(0, message.find(" ") + 1));
+			this->getHeadPtr()->setStatusCoinsLoad(true);
+			cout << "Ready to work\n";
+		}
+		else
+		{
+			string token = message.substr(0, message.find(" ") + 1);
+			if (token == "SYSTEM_CHANGE")
+			{
+				message.erase(0, message.find(" ") + 1);
+				cout << "Take the change: 10 *  "
+					<< message.substr(0, message.find(" ") + 1);
+				message.erase(0, message.find(" ") + 1);
+				cout << " rub.,  5 * "
+					<< message.substr(0, message.find(" ") + 1) << " rub.\n";
+			}
+			else
+			{
+				return;
+			}
+		}
 	}
 
 

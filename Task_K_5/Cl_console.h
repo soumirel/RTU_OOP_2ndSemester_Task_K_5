@@ -6,9 +6,6 @@
 class Cl_console :
 	public Cl_base
 {
-private:
-	bool isSetupFinished = false;
-
 public:
 
 	Cl_console(string objectName, Cl_base* parentPtr) :
@@ -23,12 +20,15 @@ public:
 
 	void handler_v(string path, string message) override
 	{
-		string currentCommand = "";
-		do
+		if (message == "SYSTEM_START")
 		{
-			getline(cin, currentCommand);
-			this->realizeEmit(currentCommand);
-		} while (currentCommand != "Cancel");
+			string currentCommand = "";
+			do
+			{
+				getline(cin, currentCommand);
+				this->realizeEmit(currentCommand);
+			} while (currentCommand != "Cancel");
+		}
 	}
 
 

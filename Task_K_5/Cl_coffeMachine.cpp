@@ -213,14 +213,11 @@ void Cl_coffeMachine::enterCommands()
 
 void Cl_coffeMachine::signal_v(string path, string message)
 {
-	cout << "\nSignal from " << path;
 }
 
 
 void Cl_coffeMachine::handler_v(string path, string message)
 {
-	cout << "\nSignal to " << path
-		<< " Text: " << message << " (class: 1)";
 }
 
 
@@ -228,6 +225,8 @@ void Cl_coffeMachine::handler_v(string path, string message)
 int Cl_coffeMachine::runMachine()
 {
 	this->setReadiness(1);
+
+	this->realizeEmit("SYSTEM_START");
 
 	return 0;
 }
