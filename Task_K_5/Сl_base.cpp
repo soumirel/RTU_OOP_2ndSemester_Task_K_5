@@ -1,13 +1,12 @@
+
 #include "Cl_base.h"
-#include "Cl_branch.h"
-#include "Cl_branch_2.h"
-#include "Cl_branch_3.h"
-#include "Cl_branch_4.h"
-#include "Cl_branch_5.h"
-
-
-// Создание объекта-прородителя
-Cl_base* Cl_base::root = new Cl_base();
+#include "Cl_coffeMachine.h"
+#include "Cl_commandHander.h"
+#include "Cl_controller.h"
+#include "Cl_cashReceiver.h"
+#include "Cl_coinsReturner.h"
+#include "Cl_coffemaker.h"
+#include "Cl_screen.h"
 
 
 //Конструктор
@@ -21,8 +20,8 @@ Cl_base::Cl_base(string objectName, Cl_base* parentPtr)
 	}
 	else
 	{
-		//Привязываем объект как головной (дочерний объект прародителя)
-		setParent(root);
+		//Делаем объект головным
+		setParent(nullptr);
 	}
 }
 
@@ -142,16 +141,12 @@ void Cl_base::emitSignal(TYPE_SIGNAL signalPtr, string& message)
 		return;
 	}
 	string absObjPath = this->getAbsPath();
+	this->signal_v(absObjPath, message);
 	bool isFirstSignal = true;
 	for (size_t iter = 0; iter < this->connections.size(); iter++)
 	{
 		if (this->connections.at(iter)->signalPtr == signalPtr)
 		{
-			if (isFirstSignal)
-			{
-				this->signal_v(absObjPath);
-				isFirstSignal = false;
-			}
 			if (this->connections.at(iter)->objectPtr->getReadiness())
 			{
 				this->handler_v(this->connections.at(iter)->objectPtr->getAbsPath(), message);
@@ -210,7 +205,7 @@ Cl_base* Cl_base::getObjectByName(string objectName)
 //Создать строку - абс. координату объекта
 string Cl_base::getAbsPath()
 {
-	if (this == root->childrenList.front())
+	if (this->getParent() == nullptr)
 	{
 		return "/";
 	}
@@ -219,7 +214,7 @@ string Cl_base::getAbsPath()
 		string absPath;
 		Cl_base* currentObjectPtr = this;
 
-		while (currentObjectPtr != root->childrenList.front())
+		while (currentObjectPtr != nullptr)
 		{
 			absPath = '/' + currentObjectPtr->getName() + absPath;
 			currentObjectPtr = currentObjectPtr->getParent();
@@ -242,7 +237,7 @@ Cl_base* Cl_base::getObjectByPath(string path)
 	//Путь указывает на корневой объект.
 	if (path == "/")
 	{
-		return root->childrenList.front();
+		return this->getHeadPtr();
 	}
 
 	size_t pathSize = path.size();
@@ -250,8 +245,8 @@ Cl_base* Cl_base::getObjectByPath(string path)
 	//Путь указывает на уникальное имя на дереве объектов.
 	if (path.front() == '/' && path.at(1) == '/')
 	{
-		if (root->getObjectByName(path.substr(2)) != root)
-			return (root->getObjectByName(path.substr(2)));
+		if (this->getObjectByName(path.substr(2)) != this->getHeadPtr())
+			return (this->getObjectByName(path.substr(2)));
 	}
 
 	//Разбиение строки на имена объектов и проверка правильности пути
@@ -305,33 +300,33 @@ void Cl_base::realizeConnection(Cl_base* firstObjectPtr, Cl_base* secondObjectPt
 	switch (firstObjectPtr->getClassNumber())
 	{
 	case 1:
-		firstObjectPtr->setConnection(SIGNAL(Cl_base::signal_v),
-			(Cl_base*)secondObjectPtr, HANDLER(Cl_base::handler_v));
+		firstObjectPtr->setConnection(SIGNAL(Cl_coffeMachine::signal_v),
+			(Cl_base*)secondObjectPtr, HANDLER(Cl_coffeMachine::handler_v));
 		break;
 
 	case 2:
-		firstObjectPtr->setConnection(SIGNAL(Cl_branch::signal_v),
-			(Cl_branch*)secondObjectPtr, HANDLER(Cl_branch::handler_v));
+		firstObjectPtr->setConnection(SIGNAL(Cl_console::signal_v),
+			(Cl_console*)secondObjectPtr, HANDLER(Cl_console::handler_v));
 		break;
 
 	case 3:
-		firstObjectPtr->setConnection(SIGNAL(Cl_branch_2::signal_v),
-			(Cl_branch_2*)secondObjectPtr, HANDLER(Cl_branch_2::handler_v));
+		firstObjectPtr->setConnection(SIGNAL(Cl_controller::signal_v),
+			(Cl_controller*)secondObjectPtr, HANDLER(Cl_controller::handler_v));
 		break;
 
 	case 4:
-		firstObjectPtr->setConnection(SIGNAL(Cl_branch_3::signal_v),
-			(Cl_branch_3*)secondObjectPtr, HANDLER(Cl_branch_3::handler_v));
+		firstObjectPtr->setConnection(SIGNAL(Cl_cashReceiver::signal_v),
+			(Cl_cashReceiver*)secondObjectPtr, HANDLER(Cl_cashReceiver::handler_v));
 		break;
 
 	case 5:
-		firstObjectPtr->setConnection(SIGNAL(Cl_branch_4::signal_v),
-			(Cl_branch_4*)secondObjectPtr, HANDLER(Cl_branch_4::handler_v));
+		firstObjectPtr->setConnection(SIGNAL(Cl_coinsReturner::signal_v),
+			(Cl_coinsReturner*)secondObjectPtr, HANDLER(Cl_coinsReturner::handler_v));
 		break;
 
 	case 6:
-		firstObjectPtr->setConnection(SIGNAL(Cl_branch_5::signal_v),
-			(Cl_branch_5*)secondObjectPtr, HANDLER(Cl_branch_5::handler_v));
+		firstObjectPtr->setConnection(SIGNAL(Cl_coffemaker::signal_v),
+			(Cl_coffemaker*)secondObjectPtr, HANDLER(Cl_coffemaker::handler_v));
 		break;
 	}
 }
@@ -342,7 +337,7 @@ void Cl_base::realizeEmit(string message)
 {
 	Cl_base* tempObjectPtr = this;
 
-	while (tempObjectPtr != root->childrenList.front())
+	while (tempObjectPtr->getParent() != nullptr)
 	{
 		if (tempObjectPtr->getReadiness())
 		{
@@ -359,27 +354,27 @@ void Cl_base::realizeEmit(string message)
 	switch (tempObjectPtr->getClassNumber())
 	{
 	case 1:
-		tempObjectPtr->emitSignal(SIGNAL(Cl_base::signal_v), message);
+		tempObjectPtr->emitSignal(SIGNAL(Cl_coffeMachine::signal_v), message);
 		break;
 
 	case 2:
-		tempObjectPtr->emitSignal(SIGNAL(Cl_branch::signal_v), message);
+		tempObjectPtr->emitSignal(SIGNAL(Cl_console::signal_v), message);
 		break;
 
 	case 3:
-		tempObjectPtr->emitSignal(SIGNAL(Cl_branch_2::signal_v), message);
+		tempObjectPtr->emitSignal(SIGNAL(Cl_controller::signal_v), message);
 		break;
 
 	case 4:
-		tempObjectPtr->emitSignal(SIGNAL(Cl_branch_3::signal_v), message);
+		tempObjectPtr->emitSignal(SIGNAL(Cl_cashReceiver::signal_v), message);
 		break;
 
 	case 5:
-		tempObjectPtr->emitSignal(SIGNAL(Cl_branch_4::signal_v), message);
+		tempObjectPtr->emitSignal(SIGNAL(Cl_coinsReturner::signal_v), message);
 		break;
 
 	case 6:
-		tempObjectPtr->emitSignal(SIGNAL(Cl_branch_5::signal_v), message);
+		tempObjectPtr->emitSignal(SIGNAL(Cl_coffemaker::signal_v), message);
 		break;
 
 	}
@@ -393,33 +388,33 @@ void Cl_base::removeConnection(Cl_base* firstObjectPtr, Cl_base* secondObjectPtr
 	switch (firstObjectPtr->getClassNumber())
 	{
 	case 1:
-		firstObjectPtr->deleteConnection(SIGNAL(Cl_base::signal_v),
-			(Cl_base*)secondObjectPtr, HANDLER(Cl_base::handler_v));
+		firstObjectPtr->deleteConnection(SIGNAL(Cl_coffeMachine::signal_v),
+			(Cl_base*)secondObjectPtr, HANDLER(Cl_coffeMachine::handler_v));
 		break;
 
 	case 2:
-		firstObjectPtr->deleteConnection(SIGNAL(Cl_branch::signal_v),
-			(Cl_branch*)secondObjectPtr, HANDLER(Cl_branch::handler_v));
+		firstObjectPtr->deleteConnection(SIGNAL(Cl_console::signal_v),
+			(Cl_console*)secondObjectPtr, HANDLER(Cl_console::handler_v));
 		break;
 
 	case 3:
-		firstObjectPtr->deleteConnection(SIGNAL(Cl_branch_2::signal_v),
-			(Cl_branch_2*)secondObjectPtr, HANDLER(Cl_branch_2::handler_v));
+		firstObjectPtr->deleteConnection(SIGNAL(Cl_controller::signal_v),
+			(Cl_controller*)secondObjectPtr, HANDLER(Cl_controller::handler_v));
 		break;
 
 	case 4:
-		firstObjectPtr->deleteConnection(SIGNAL(Cl_branch_3::signal_v),
-			(Cl_branch_3*)secondObjectPtr, HANDLER(Cl_branch_3::handler_v));
+		firstObjectPtr->deleteConnection(SIGNAL(Cl_cashReceiver::signal_v),
+			(Cl_cashReceiver*)secondObjectPtr, HANDLER(Cl_cashReceiver::handler_v));
 		break;
 
 	case 5:
-		firstObjectPtr->deleteConnection(SIGNAL(Cl_branch_4::signal_v),
-			(Cl_branch_4*)secondObjectPtr, HANDLER(Cl_branch_4::handler_v));
+		firstObjectPtr->deleteConnection(SIGNAL(Cl_coinsReturner::signal_v),
+			(Cl_coinsReturner*)secondObjectPtr, HANDLER(Cl_coinsReturner::handler_v));
 		break;
 
 	case 6:
-		firstObjectPtr->deleteConnection(SIGNAL(Cl_branch_5::signal_v),
-			(Cl_branch_5*)secondObjectPtr, HANDLER(Cl_branch_5::handler_v));
+		firstObjectPtr->deleteConnection(SIGNAL(Cl_coffemaker::signal_v),
+			(Cl_coffemaker*)secondObjectPtr, HANDLER(Cl_coffemaker::handler_v));
 		break;
 	}
 }
@@ -455,7 +450,7 @@ void Cl_base::printTree(bool isPrintReadiness, unsigned tabLevel)
 }
 
 
-void Cl_base::signal_v(string path)
+void Cl_base::signal_v(string path, string message)
 {
 	cout << "\nSignal from " << path;
 }
@@ -465,4 +460,16 @@ void Cl_base::handler_v(string path, string message)
 {
 	cout << "\nSignal to " << path
 		<< " Text: " << message << " (class: 1)";
+}
+
+Cl_base* Cl_base::getHeadPtr()
+{
+	Cl_base* p_tempObject = this;
+
+	while (p_tempObject->getParent() != nullptr)
+	{
+		p_tempObject = p_tempObject->getParent();
+	}
+
+	return p_tempObject;
 }

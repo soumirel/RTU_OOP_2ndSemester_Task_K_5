@@ -18,30 +18,33 @@
     <ClInclude Include="Cl_base.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="Cl_application.h">
+    <ClInclude Include="Cl_coffeMachine.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="Cl_branch_2.h">
+    <ClInclude Include="Cl_controller.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="Cl_branch_3.h">
+    <ClInclude Include="Cl_cashReceiver.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="Cl_branch_4.h">
+    <ClInclude Include="Cl_coinsReturner.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="Cl_branch_5.h">
+    <ClInclude Include="Cl_coffemaker.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="Cl_branch.h">
+    <ClInclude Include="Cl_console.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Cl_screen.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="cl_base.cpp">
+    <ClCompile Include="Сl_base.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="cl_application.cpp">
+    <ClCompile Include="Cl_coffeMachine.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">

@@ -17,6 +17,9 @@ typedef void (Cl_base::* TYPE_HANDLER) (string);
 
 class Cl_base
 {
+protected:
+	bool isSystemReady = false;
+
 private:
 	// Имя объекта
 	string objectName = "";
@@ -25,7 +28,7 @@ private:
 	Cl_base* parentPtr = nullptr;
 
 	// Состояние готовности объекта
-	bool readiness = true;
+	bool readiness = false;
 
 	// Структура информации о связи объектов
 	struct connectionInfo
@@ -39,15 +42,12 @@ private:
 	vector<connectionInfo*> connections;
 
 public:
-	// Объект root - "родитель" всех объектов
-	static Cl_base* root;
 
 	// Вектор указателей дочерних объектов
 	vector<Cl_base*> childrenList;
 
-	// Конструкторы
-	Cl_base() { parentPtr = nullptr; };
-	Cl_base(string objectName, Cl_base* parentPtr = nullptr);
+	// Конструктор
+	Cl_base(string objectName, Cl_base* parentPtr);
 
 	// Сетеры
 	void setName(string objectName);
@@ -61,8 +61,16 @@ public:
 	virtual size_t getClassNumber();
 
 	// Виртуальный метод сигнала и обработчика
-	virtual void signal_v(string path);
+	virtual void signal_v(string path, string message);
 	virtual void handler_v(string path, string message);
+
+	//Виртульные методы для использования метода класса Cl_coffeMachine
+	//при рассмотрении через Cl_base
+	virtual bool getStatusCoffeLoad();
+	virtual bool getStatusCoinsLoad();
+
+	//Получение указателя на головной объект
+	Cl_base* getHeadPtr();
 
 	// Получение указателя на объект через его имя
 	Cl_base* getObjectByName(string name);

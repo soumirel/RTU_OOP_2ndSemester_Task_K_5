@@ -1,18 +1,18 @@
-#ifndef CL_BRANCH_5_H
-#define CL_BRANCH_5_H
+#ifndef CL_CONTROLLER_H
+#define CL_CONTROLLER_H
 
 #include "Cl_base.h"
 
-class Cl_branch_5 :
+class Cl_controller :
 	public Cl_base
 {
 public:
 
-	Cl_branch_5(string objectName, Cl_base* parentPtr) :
+	Cl_controller(string objectName, Cl_base* parentPtr) :
 		Cl_base(objectName, parentPtr) {};
 
 
-	void signal_v(string path) override
+	void signal_v(string path, string message) override
 	{
 		cout << '\n' << "Signal from " << path;
 	}
@@ -21,13 +21,13 @@ public:
 	void handler_v(string path, string message) override
 	{
 		cout << '\n' << "Signal to " << path
-			<< " Text: " << message << " (class: 6)";
+			<< " Text: " << message << " (class: 3)";
 	}
 
 
 	size_t getClassNumber()
 	{
-		return 6;
+		return 3;
 	}
 };
 

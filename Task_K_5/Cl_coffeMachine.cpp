@@ -1,110 +1,71 @@
 
-#include "Cl_application.h"
-#include "Cl_branch.h"
-#include "Cl_branch_2.h"
-#include "Cl_branch_3.h"
-#include "Cl_branch_4.h"
-#include "Cl_branch_5.h"
+#include "Cl_coffeMachine.h"
+#include "Cl_console.h"
+#include "Cl_controller.h"
+#include "Cl_cashReceiver.h"
+#include "Cl_coinsReturner.h"
+#include "Cl_coffemaker.h"
+#include "Cl_screen.h"
 
 
-//Конструктор
-Cl_application::Cl_application(Cl_base* parentPtr)
+bool Cl_coffeMachine::getStatusCoffeLoad()
 {
-	//Использование сетеров обусловленно закрытостью полей
-	Cl_base::root->setParent(parentPtr);
-	Cl_base::root->setName("sys_root");
-	Cl_base::root->setReadiness(1);
+	return statusCoffeLoad;
 }
 
+bool Cl_coffeMachine::getStatusCoinsLoad()
+{
+	return statusCoinsLoad;
+}
 
 //Запуск этапа ввода для построения дерева
-void Cl_application::buildTree()
+void Cl_coffeMachine::buildTree()
 {
-	string headName = "", childName = "", path = "";
-	int classNumber;
+	//Иннициализация объектов-компонентов кофемашины
+	Cl_base* p_consoleObject = new Cl_console("consoleObject", this);
 
-	cin >> headName;
+	Cl_base* p_controllerObject = new Cl_controller("controllerObject", this);
 
-	// Головной объект
-	Cl_base* head = new Cl_base(headName);
+	Cl_base* p_cashReceiverObject = new Cl_cashReceiver("cashReceiverObject", this);
 
-	cin >> path;
-	while (path != "endtree")
+	Cl_base* p_coinsReturner = new Cl_coinsReturner("coinsReturner", this);
+
+	Cl_base* p_coffemakerObject = new Cl_coffemaker("coffemakerObject", this);
+
+	Cl_base* p_screenObject = new Cl_screen("screenObject", this);
+
+	//Связка системы и объекта-обработчика консольных команд
+	this->realizeConnection(this, p_consoleObject);
+
+	//Установка связей испускатель-обработчик между объектами
+	for (size_t i = 1; i < this->childrenList.size() - 1; i++)
 	{
-		cin >> childName >> classNumber;
-
-		Cl_base* currentParentPtr = root->childrenList.front()->getObjectByPath(path);
-
-		//Досрочное завершение работы программы
-		//если на этапе построения системы объектов возникла ошибка.
-		if (currentParentPtr == nullptr)
-		{
-			cout << "Object tree";
-			root->childrenList.front()->printTree(false);
-			cout << "\nThe head object " << path << " is not found";
-
-			exit(1);
-		}
-
-		// Создание дочернего объекта определённого класса
-		// определяемого введённым номером
-		switch (classNumber)
-		{
-		case 2:
-		{
-			Cl_base* child = new Cl_branch(childName, currentParentPtr);
-			break;
-		}
-
-		case 3:
-		{
-			Cl_base* child = new Cl_branch_2(childName, currentParentPtr);
-			break;
-		}
-
-		case 4:
-		{
-			Cl_base* child = new Cl_branch_3(childName, currentParentPtr);
-			break;
-		}
-
-		case 5:
-		{
-			Cl_base* child = new Cl_branch_4(childName, currentParentPtr);
-			break;
-		}
-
-		case 6:
-		{
-			Cl_base* child = new Cl_branch_5(childName, currentParentPtr);
-			break;
-		}
-
-		}
-
-		cin >> path;
+		this->childrenList.at(i)->realizeConnection(
+			this->childrenList.at(i), p_screenObject);
 	}
 
-	enterConnections();
+	//Соединение логически связанных объектов
+	p_cashReceiverObject->realizeConnection(p_cashReceiverObject, p_screenObject);
+	p_controllerObject->realizeConnection(p_controllerObject, p_coffemakerObject);
 
 	return;
 }
 
 
 //Запуск этапа ввода для установки готовностей объектов
-void Cl_application::enterReadiness()
+void Cl_coffeMachine::enterReadiness()
 {
 	string objectName;
 	long long numericReadiness;
 	while (cin >> objectName >> numericReadiness)
 	{
-		(root->getObjectByName(objectName))->setReadiness(numericReadiness);
+		(this->getObjectByName(objectName))->setReadiness(numericReadiness);
 	}
 }
 
 
 //Запуск этапа ввода для установки связей между объектами
-void Cl_application::enterConnections()
+void Cl_coffeMachine::enterConnections()
 {
 	string signalPath, handlerPath;
 	cin >> signalPath;
@@ -112,8 +73,8 @@ void Cl_application::enterConnections()
 	{
 		cin >> handlerPath;
 
-		Cl_base* firstObjectPtr = root->childrenList.front()->getObjectByPath(signalPath);
-		Cl_base* secondObjectPtr = root->childrenList.front()->getObjectByPath(handlerPath);
+		Cl_base* firstObjectPtr = this->getObjectByPath(signalPath);
+		Cl_base* secondObjectPtr = this->getObjectByPath(handlerPath);
 
 		firstObjectPtr->realizeConnection(firstObjectPtr, secondObjectPtr);
 
@@ -123,9 +84,9 @@ void Cl_application::enterConnections()
 
 
 //Запуск этапа ввода для осуществления манипуляций над объектами при помощи команд
-void Cl_application::enterCommands()
+void Cl_coffeMachine::enterCommands()
 {
-	Cl_base* setedObjectPtr = root->childrenList.front();
+	Cl_base* setedObjectPtr = this;
 	Cl_base* objectFromPath;
 
 	string command, path;
@@ -188,7 +149,7 @@ void Cl_application::enterCommands()
 			cin >> condition;
 
 			Cl_base* tempObjectPtr;
-			tempObjectPtr = root->childrenList.front()->getObjectByPath(path);
+			tempObjectPtr = this->getObjectByPath(path);
 
 			if (tempObjectPtr)
 			{
@@ -207,7 +168,7 @@ void Cl_application::enterCommands()
 			cin >> connectPath;
 
 			Cl_base* tempObjectPtr;
-			tempObjectPtr = root->childrenList.front()->getObjectByPath(connectPath);
+			tempObjectPtr = this->getObjectByPath(connectPath);
 
 			//Проверка на существование объектов по координатам
 			if (objectFromPath == nullptr || tempObjectPtr == nullptr)
@@ -239,15 +200,24 @@ void Cl_application::enterCommands()
 }
 
 
-//Запуск объекта приложения
-int Cl_application::execApp()
+void Cl_base::signal_v(string path, string message)
 {
-	// Вывод построенного дерева;
-	cout << "Object tree";
-	root->childrenList.front()->printTree(false);
+	cout << "\nSignal from " << path;
+}
 
-	//Запуск навигации по дереву
-	this->enterCommands();
+
+void Cl_base::handler_v(string path, string message)
+{
+	cout << "\nSignal to " << path
+		<< " Text: " << message << " (class: 1)";
+}
+
+
+//Запуск объекта приложения
+int Cl_coffeMachine::runMachine()
+{
+	this->setReadiness(1);
 
 	return 0;
 }
+

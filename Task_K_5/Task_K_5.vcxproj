@@ -139,17 +139,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Cl_application.h" />
+    <ClInclude Include="Cl_coffeMachine.h" />
     <ClInclude Include="Cl_base.h" />
-    <ClInclude Include="Cl_branch.h" />
-    <ClInclude Include="Cl_branch_2.h" />
-    <ClInclude Include="Cl_branch_3.h" />
-    <ClInclude Include="Cl_branch_4.h" />
-    <ClInclude Include="Cl_branch_5.h" />
+    <ClInclude Include="Cl_console.h" />
+    <ClInclude Include="Cl_controller.h" />
+    <ClInclude Include="Cl_cashReceiver.h" />
+    <ClInclude Include="Cl_coinsReturner.h" />
+    <ClInclude Include="Cl_coffemaker.h" />
+    <ClInclude Include="Cl_screen.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="cl_application.cpp" />
-    <ClCompile Include="cl_base.cpp" />
+    <ClCompile Include="Cl_coffeMachine.cpp" />
+    <ClCompile Include="Сl_base.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
