@@ -17,9 +17,6 @@ typedef void (Cl_base::* TYPE_HANDLER) (string);
 
 class Cl_base
 {
-protected:
-	bool isSystemReady = false;
-
 private:
 	// Имя объекта
 	string objectName = "";
@@ -67,7 +64,9 @@ public:
 	//Виртульные методы для использования метода класса Cl_coffeMachine
 	//при рассмотрении через Cl_base
 	virtual bool getStatusCoffeLoad();
-	virtual bool getStatusCoinsLoad();
+	virtual bool getStatusCoinsLoad();	
+	virtual void setStatusCoffeLoad(bool status) {};
+	virtual void setStatusCoinsLoad(bool status) {};
 
 	//Получение указателя на головной объект
 	Cl_base* getHeadPtr();

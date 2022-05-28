@@ -1,7 +1,7 @@
 
 #include "Cl_base.h"
 #include "Cl_coffeMachine.h"
-#include "Cl_commandHander.h"
+#include "Cl_console.h"
 #include "Cl_controller.h"
 #include "Cl_cashReceiver.h"
 #include "Cl_coinsReturner.h"
@@ -461,6 +461,20 @@ void Cl_base::handler_v(string path, string message)
 	cout << "\nSignal to " << path
 		<< " Text: " << message << " (class: 1)";
 }
+
+
+bool Cl_base::getStatusCoffeLoad()
+{
+	return false;
+}
+
+
+bool Cl_base::getStatusCoinsLoad()
+{
+	return false;
+}
+
+
 
 Cl_base* Cl_base::getHeadPtr()
 {

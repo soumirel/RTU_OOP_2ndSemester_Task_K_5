@@ -1,4 +1,5 @@
 
+
 #include "Cl_coffeMachine.h"
 #include "Cl_console.h"
 #include "Cl_controller.h"
@@ -16,6 +17,16 @@ bool Cl_coffeMachine::getStatusCoffeLoad()
 bool Cl_coffeMachine::getStatusCoinsLoad()
 {
 	return statusCoinsLoad;
+}
+
+void Cl_coffeMachine::setStatusCoffeLoad(bool status)
+{
+	this->statusCoffeLoad = status;
+}
+
+void Cl_coffeMachine::setStatusCoinsLoad(bool status)
+{
+	this->statusCoinsLoad = status;
 }
 
 //Запуск этапа ввода для построения дерева
@@ -200,13 +211,13 @@ void Cl_coffeMachine::enterCommands()
 }
 
 
-void Cl_base::signal_v(string path, string message)
+void Cl_coffeMachine::signal_v(string path, string message)
 {
 	cout << "\nSignal from " << path;
 }
 
 
-void Cl_base::handler_v(string path, string message)
+void Cl_coffeMachine::handler_v(string path, string message)
 {
 	cout << "\nSignal to " << path
 		<< " Text: " << message << " (class: 1)";

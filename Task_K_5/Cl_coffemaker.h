@@ -42,12 +42,12 @@ public:
 
 	void handler_v(string path, string message) override
 	{
-		if ((dynamic_cast<Cl_coffeMachine*>(this->getHeadPtr()))->getStatusCoffeLoad())
+		if (this->getHeadPtr()->getStatusCoffeLoad() == false)
 		{
 			if (coffeTypesNumber == -1)
 			{
 				size_t delimeterPosition = 0;
-				while ((delimeterPosition = message.find(" ")) != string::npos) 
+				while ((delimeterPosition = message.find(" ")) != string::npos)
 				{
 					if (coffeTypesNumber == -1)
 					{
@@ -60,41 +60,30 @@ public:
 					message.erase(0, delimeterPosition + 1);
 				}
 				coffeTypesNames.push_back(message.substr(0, message.size() - 1));
+				this->getHeadPtr()
 
-			}
-			else
-			{
-				size_t delimeterPosition = 0;
-				string token = "";
-				while ((delimeterPosition = message.find(" ")) != string::npos) 
-				{
-					token = message.substr(0, delimeterPosition + 1);
-					if (token == "SYSTEM_COFFE")
-					{
-						message.erase(0, message.find(" ") + 1);
-						cout << "Take the coffe " << message << '\n';
-					}
-					else
-					{
-						return;
-					}
-				}
 			}
 		}
 		else
 		{
-			size_t delimiterPosition = message.find(" ");
-			if (delimiterPosition != string::npos)
+			size_t delimeterPosition = 0;
+			string token = "";
+			while ((delimeterPosition = message.find(" ")) != string::npos) 
 			{
-				string token = message.substr(0, delimiterPosition);
-				if (token == "SYSTEM_MAKE_COFFE")
+				token = message.substr(0, delimeterPosition + 1);
+				if (token == "SYSTEM_COFFE")
 				{
-					message.erase(0, delimiterPosition + 1);
-					this->realizeEmit("Take the coffee " + message);
+					message.erase(0, message.find(" ") + 1);
+					cout << "Take the coffe " << message << '\n';
+				}
+				else
+				{
+					return;
 				}
 			}
 		}
 	}
+
 
 
 	size_t getClassNumber()

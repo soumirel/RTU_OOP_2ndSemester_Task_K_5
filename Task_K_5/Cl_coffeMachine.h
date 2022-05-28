@@ -12,15 +12,20 @@ private:
 	bool statusCoinsLoad = false;
 
 public:
-
-
 	//Конструктор
 	Cl_coffeMachine(string objectName = "coffeMachineObject", Cl_base* parentPtr = nullptr) :
 		Cl_base(objectName, parentPtr) {};
 
-	//Геттеры статусов загрузки сдачи и кофе
+	//Геттеры и сеттеры статусов загрузки сдачи и кофе
 	bool getStatusCoffeLoad() override;
 	bool getStatusCoinsLoad() override;
+	void setStatusCoffeLoad(bool status) override;
+	void setStatusCoinsLoad(bool status) override;
+
+	//Сигнал и обработчик
+	void signal_v(string path, string message) override;
+
+	void handler_v(string path, string message) override;
 
 	//Запуск этапа ввода для построения дерева
 	void buildTree();
