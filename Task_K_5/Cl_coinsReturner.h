@@ -19,7 +19,11 @@ public:
 
 	void signal_v(string path, string message) override
 	{
-		cout << '\n' << "Signal from " << path;
+		cout << "Take the change: 10 *  " 
+			<< message.substr(0, message.find(" ") + 1);
+		message.erase(0, message.find(" ") + 1);
+		cout << " rub.,  5 * "
+			<< message.substr(0, message.find(" ") + 1) << " rub.\n";
 	}
 
 
@@ -40,11 +44,16 @@ public:
 			if (token == "SYSTEM_CHANGE")
 			{
 				message.erase(0, message.find(" ") + 1);
-				cout << "Take the change: 10 *  "
+				size_t moneyToReturn = stoi(message);
+				size_t tennerToReturn = moneyToReturn / 10;
+				moneyToReturn /= 10;
+				size_t fiverToReturn = moneyToReturn;
+				this->realizeEmit(to_string(tennerToReturn) + to_string(fiverToReturn));
+				/*cout << "Take the change: 10 *  "
 					<< message.substr(0, message.find(" ") + 1);
 				message.erase(0, message.find(" ") + 1);
 				cout << " rub.,  5 * "
-					<< message.substr(0, message.find(" ") + 1) << " rub.\n";
+					<< message.substr(0, message.find(" ") + 1) << " rub.\n";*/
 			}
 			else
 			{
