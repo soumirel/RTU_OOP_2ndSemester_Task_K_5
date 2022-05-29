@@ -23,7 +23,17 @@ public:
 
 	void handler_v(string path, string message) override
 	{
-		
+		if (this->getHeadPtr()->getStatusCoffeLoad() == true
+			&& this->getHeadPtr()->getStatusCoinsLoad() == true)
+		{
+			string token = message.substr(0, message.find(" ") + 1);
+			message.erase(0, message.find(" ") + 1);
+
+			if (token == "SYSTEM_SHOW_BALANCE")
+			{
+				cout << "The amount: " << message;
+			}
+		}
 	}
 
 

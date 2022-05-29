@@ -59,6 +59,7 @@ void Cl_coffeMachine::buildTree()
 	p_controllerObject->realizeConnection(p_controllerObject, p_coffemakerObject);
 	p_coffemakerObject->realizeConnection(p_coffemakerObject, p_coinsReturner);
 	p_cashReceiverObject->realizeConnection(p_cashReceiverObject, p_coinsReturner);
+	p_coinsReturner->realizeConnection(p_coinsReturner, p_cashReceiverObject);
 
 	return;
 }

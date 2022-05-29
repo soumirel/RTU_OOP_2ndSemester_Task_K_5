@@ -41,26 +41,39 @@ public:
 			this->getHeadPtr()->setStatusCoinsLoad(true);
 			cout << "Ready to work\n";
 		}
-		else
+
+		if (this->getHeadPtr()->getStatusCoffeLoad() == true
+			&& this->getHeadPtr()->getStatusCoinsLoad() == true)
 		{
 			string token = message.substr(0, message.find(" ") + 1);
+			message.erase(0, message.find(" ") + 1);
 			if (token == "SYSTEM_CHANGE")
 			{
-				message.erase(0, message.find(" ") + 1);
+				
 				size_t moneyToReturn = actualMoney - stoi(message);
 				size_t tennerToReturn = moneyToReturn / 10;
-				moneyToReturn /= 10;
-				size_t fiverToReturn = moneyToReturn;
-
+				size_t fiverToReturn = moneyToReturn % 10;
 				this->realizeEmit(to_string(tennerToReturn) + to_string(fiverToReturn));
 			}
-			else if (isNumber(token))
+			else if (token == "SYSTEM_CHEK_COINS")
 			{
-				actualMoney = stoi(token);
-			}
-			else
-			{
-				return;
+				size_t receivedMoney = stoi(message);
+				size_t necessaryTenner = receivedMoney / 10;
+				size_t neccessaryFiver = receivedMoney % 10;
+				if (necessaryTenner <= tennerNumber && neccessaryFiver <= fiverNumber)
+				{
+					if (receivedMoney == 0)
+					{
+						actualMoney = receivedMoney;
+					}
+					else
+					{
+						actualMoney += receivedMoney;
+					}
+		
+					this->realizeEmit(to_string(receivedMoney));
+				}
+				
 			}
 		}
 	}

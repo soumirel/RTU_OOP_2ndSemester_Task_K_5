@@ -28,16 +28,24 @@ public:
 			&& this->getHeadPtr()->getStatusCoinsLoad() == true)
 		{
 			string token = message.substr(0, message.find(" ") + 1);
+			message.erase(0, message.find(" ") + 1);
+
 			if (isNumber(token) == true)
 			{
-				cashInMachine += stoi(token);
-				this->realizeEmit(to_string(cashInMachine));
+				this->realizeEmit("SYSTEM_CHEK_COINS " + token);
 			}
+
 			if (token == "SYSTEM_REFUND")
 			{
 				cout << "Take the money back, no change";
 				cashInMachine = 0;
-				this->realizeEmit("0");
+				this->realizeEmit("SYSTEM_CHEK_COINS 0");
+			}
+
+			if (token == "SYSTEM_RECEIVE")
+			{
+				cashInMachine += stoi(message);
+				this->realizeEmit("SYSTEM_SHOW_BALANCE " + to_string(cashInMachine));
 			}
 		}
 	}

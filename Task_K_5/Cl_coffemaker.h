@@ -79,14 +79,16 @@ public:
 			coffeTypesNames.push_back(message.substr(0, message.size() - 1));
 			this->getHeadPtr()->setStatusCoffeLoad(true);
 		}
-		else
+
+		if (this->getHeadPtr()->getStatusCoffeLoad() == true
+			&& this->getHeadPtr()->getStatusCoinsLoad() == true)
 		{
 			string token = message.substr(0, message.find(" ") + 1);
 			if (token == "SYSTEM_COFFE")
 			{
 				message.erase(0, message.find(" ") + 1);
 				this->realizeEmit(message);
-				this->realizeEmit("SYSTEM_CHANGE"
+				this->realizeEmit("SYSTEM_CHANGE "
 					+ to_string(getPrice(message)));
 			}
 			else

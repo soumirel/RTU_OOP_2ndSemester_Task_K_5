@@ -26,7 +26,7 @@ public:
 			message.erase(0, message.find(' ') + 1);
 			if (token == "Coffe")
 			{
-				this->realizeEmit("SYSTEM_COFFE" + message);
+				this->realizeEmit("SYSTEM_COFFE " + message);
 			}
 			else if (token == "Refund")
 			{
