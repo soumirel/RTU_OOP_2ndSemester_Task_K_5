@@ -22,6 +22,13 @@ public:
 
 	void signal_v(string path, string message) override
 	{
+		string token = message.substr(0, message.find(" "));
+		message.erase(0, message.find(" ") + 1);
+		if ((isNumber(token) == false) || (isNumber(message) == false))
+		{
+			return;
+		}
+
 		cout << "Take the change: 10 *  " 
 			<< message.substr(0, message.find(" ") + 1);
 		message.erase(0, message.find(" ") + 1);
@@ -36,17 +43,17 @@ public:
 			&& this->getHeadPtr()->getStatusCoinsLoad() == false)
 		{
 			fiverNumber = stoi(message.substr(0, message.find(" ") + 1));
-			message.erase(0, message.find(" ") + 1);
-			tennerNumber = stoi(message.substr(0, message.find(" ") + 1));
+			message.erase(0, message.find(" "));
+			tennerNumber = stoi(message.substr(0, message.size()));
 			this->getHeadPtr()->setStatusCoinsLoad(true);
 			cout << "Ready to work\n";
-		}
-
-		if (this->getHeadPtr()->getStatusCoffeLoad() == true
+		} 
+		else if (this->getHeadPtr()->getStatusCoffeLoad() == true 
 			&& this->getHeadPtr()->getStatusCoinsLoad() == true)
 		{
-			string token = message.substr(0, message.find(" ") + 1);
+			string token = message.substr(0, message.find(" "));
 			message.erase(0, message.find(" ") + 1);
+
 			if (token == "SYSTEM_CHANGE")
 			{
 				
@@ -55,7 +62,15 @@ public:
 				size_t fiverToReturn = moneyToReturn % 10;
 				this->realizeEmit(to_string(tennerToReturn) + to_string(fiverToReturn));
 			}
-			else if (token == "SYSTEM_CHEK_COINS")
+
+			if (token == "SYSTEM_REFUND")
+			{
+				cout << "Take the money back, no change\n";
+				actualMoney = 0;
+				this->realizeEmit("SYSTEM_RECEIVE 0");
+			}
+
+			if (token == "SYSTEM_CHECK_COINS")
 			{
 				size_t receivedMoney = stoi(message);
 				size_t necessaryTenner = receivedMoney / 10;
@@ -71,9 +86,17 @@ public:
 						actualMoney += receivedMoney;
 					}
 		
-					this->realizeEmit(to_string(receivedMoney));
+					this->realizeEmit("SYSTEM_RECEIVE " + to_string(receivedMoney));
 				}
-				
+				else
+				{
+					this->realizeEmit("SYSTEM_RETURN_BANKNOTE");
+				}
+			}
+
+			if (token == "SYSTEM_GET_BALANCE")
+			{
+				this->realizeEmit("SYSTEM_RECIVE_BALANCE " + to_string(actualMoney));
 			}
 		}
 	}

@@ -10,22 +10,22 @@ class Cl_coffemaker :
 private:
 
 	// Структура с информацией о связи сорт-цена
-	struct coffeInfo
+	struct coffeeInfo
 	{
 		string name_;
 		size_t price_;
 		
-		coffeInfo(string name = "", size_t price = 0)
+		coffeeInfo(string name = "", size_t price = 0)
 		{
 			price_ = price;
 			name_ = name;
 		}
 	};
 
-	vector<coffeInfo> coffeInMachine;
+	vector<coffeeInfo> coffeeInMachine;
 
-	int coffeTypesNumber = -1;
-	vector<string> coffeTypesNames;
+	int coffeeTypesNumber = -1;
+	vector<string> coffeeTypesNames;
 
 public:
 
@@ -37,9 +37,9 @@ public:
 	{
 		string token = message.substr(0, message.find(" ") + 1);
 
-		for (size_t i = 0; i < coffeInMachine.size(); i++)
+		for (size_t i = 0; i < coffeeInMachine.size(); i++)
 		{
-			if (token == coffeInMachine.at(i).name_)
+			if (token == coffeeInMachine.at(i).name_)
 			{
 				cout << "Take the coffe " << message 
 					<< "\nReady to work\n";
@@ -50,11 +50,11 @@ public:
 
 	size_t getPrice(string coffeeType)
 	{
-		for (size_t i = 0; i < coffeInMachine.size(); i++)
+		for (size_t i = 0; i < coffeeInMachine.size(); i++)
 		{
-			if (coffeeType == coffeInMachine.at(i).name_)
+			if (coffeeType == coffeeInMachine.at(i).name_)
 			{
-				return coffeInMachine.at(i).price_;
+				return coffeeInMachine.at(i).price_;
 			}
 		}
 	}
@@ -64,36 +64,56 @@ public:
 		if (this->getHeadPtr()->getStatusCoffeLoad() == false)
 		{
 			size_t delimeterPosition = 0;
-			while ((delimeterPosition = message.find(" ")) != string::npos)
+			if (coffeeTypesNumber == -1)
 			{
-				if (coffeTypesNumber == -1)
+				while ((delimeterPosition = message.find(" ")) != string::npos)
 				{
-					coffeTypesNumber = stoi(message.substr(0, delimeterPosition));
+					if (coffeeTypesNumber == -1)
+					{
+						coffeeTypesNumber = stoi(message.substr(0, delimeterPosition));
+					}
+					else
+					{
+						coffeeTypesNames.push_back(message.substr(0, delimeterPosition));
+					}
+					message.erase(0, delimeterPosition + 1);
 				}
-				else
-				{
-					coffeTypesNames.push_back(message.substr(0, delimeterPosition));
-				}
-				message.erase(0, delimeterPosition + 1);
+				coffeeTypesNames.push_back(message.substr(0, message.size()));
 			}
-			coffeTypesNames.push_back(message.substr(0, message.size() - 1));
-			this->getHeadPtr()->setStatusCoffeLoad(true);
+			else
+			{
+				string token = "";
+				while ((delimeterPosition = message.find(" ")) != string::npos)
+				{
+					token = message.substr(0, delimeterPosition);
+					message.erase(0, delimeterPosition + 1);
+
+					coffeeInMachine.push_back(coffeeInfo(coffeeTypesNames.front(), stoi(token)));
+					coffeeTypesNames.erase(coffeeTypesNames.begin());
+				}
+				token = message.substr(0, message.size());
+				coffeeInMachine.push_back(coffeeInfo(coffeeTypesNames.front(), stoi(token)));
+
+				this->getHeadPtr()->setStatusCoffeLoad(true);
+			}
 		}
 
 		if (this->getHeadPtr()->getStatusCoffeLoad() == true
 			&& this->getHeadPtr()->getStatusCoinsLoad() == true)
 		{
 			string token = message.substr(0, message.find(" ") + 1);
-			if (token == "SYSTEM_COFFE")
+			message.erase(0, message.find(" ") + 1);
+
+			if (token == "SYSTEM_COFFEE")
 			{
-				message.erase(0, message.find(" ") + 1);
+				
 				this->realizeEmit(message);
-				this->realizeEmit("SYSTEM_CHANGE "
-					+ to_string(getPrice(message)));
+				this->realizeEmit("SYSTEM_CHANGE " + to_string(getPrice(message)));
 			}
-			else
+			
+			if (token == "SYSTEM_GET_PRICE")
 			{
-				return;
+				this->realizeEmit("SYSTEM_RECIVE_PRICE " + to_string(getPrice(message)));
 			}
 		}
 	}

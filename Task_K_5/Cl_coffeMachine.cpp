@@ -50,16 +50,26 @@ void Cl_coffeMachine::buildTree()
 	//Установка связей испускатель-обработчик между объектами
 	for (size_t i = 1; i < this->childrenList.size() - 1; i++)
 	{
-		this->childrenList.at(i)->realizeConnection(
-			this->childrenList.at(i), p_screenObject);
+		p_consoleObject->realizeConnection(
+			p_consoleObject , this->childrenList.at(i));
 	}
 
 	//Соединение логически связанных объектов
 	p_cashReceiverObject->realizeConnection(p_cashReceiverObject, p_screenObject);
+
+	p_controllerObject->realizeConnection(p_controllerObject, p_coinsReturner);
+
 	p_controllerObject->realizeConnection(p_controllerObject, p_coffemakerObject);
+
 	p_coffemakerObject->realizeConnection(p_coffemakerObject, p_coinsReturner);
+
 	p_cashReceiverObject->realizeConnection(p_cashReceiverObject, p_coinsReturner);
+
 	p_coinsReturner->realizeConnection(p_coinsReturner, p_cashReceiverObject);
+
+	p_coffemakerObject->realizeConnection(p_coffemakerObject, p_controllerObject);
+
+	p_coinsReturner->removeConnection(p_coinsReturner, p_controllerObject);
 
 	return;
 }
@@ -220,6 +230,11 @@ void Cl_coffeMachine::signal_v(string path, string message)
 
 void Cl_coffeMachine::handler_v(string path, string message)
 {
+}
+
+size_t Cl_coffeMachine::getClassNumber()
+{
+	return 1;
 }
 
 

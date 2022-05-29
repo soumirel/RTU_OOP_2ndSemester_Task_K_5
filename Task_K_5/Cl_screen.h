@@ -17,7 +17,7 @@ public:
 
 	void signal_v(string path, string message) override
 	{
-		
+		return;
 	}
 
 
@@ -26,12 +26,12 @@ public:
 		if (this->getHeadPtr()->getStatusCoffeLoad() == true
 			&& this->getHeadPtr()->getStatusCoinsLoad() == true)
 		{
-			string token = message.substr(0, message.find(" ") + 1);
+			string token = message.substr(0, message.find(" "));
 			message.erase(0, message.find(" ") + 1);
 
 			if (token == "SYSTEM_SHOW_BALANCE")
 			{
-				cout << "The amount: " << message;
+				cout << "The amount: " << message << '\n';
 			}
 		}
 	}

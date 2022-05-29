@@ -23,29 +23,42 @@ public:
 
 	void handler_v(string path, string message) override
 	{
-
 		if (this->getHeadPtr()->getStatusCoffeLoad() == true
 			&& this->getHeadPtr()->getStatusCoinsLoad() == true)
 		{
-			string token = message.substr(0, message.find(" ") + 1);
+			size_t delimeterPosotion = message.find(" ");
+			string token = "";
+			if (delimeterPosotion == string::npos)
+			{
+				token = message;
+			}
+			else
+			{
+				token = message.substr(0, message.find(" "));
+			}
 			message.erase(0, message.find(" ") + 1);
 
 			if (isNumber(token) == true)
 			{
-				this->realizeEmit("SYSTEM_CHEK_COINS " + token);
-			}
-
-			if (token == "SYSTEM_REFUND")
-			{
-				cout << "Take the money back, no change";
-				cashInMachine = 0;
-				this->realizeEmit("SYSTEM_CHEK_COINS 0");
+				this->realizeEmit("SYSTEM_CHECK_COINS " + token);
 			}
 
 			if (token == "SYSTEM_RECEIVE")
 			{
+				if (message == "0")
+				{
+				cashInMachine = stoi(message);
+				}
+				else
+				{
 				cashInMachine += stoi(message);
+				}
 				this->realizeEmit("SYSTEM_SHOW_BALANCE " + to_string(cashInMachine));
+			}
+
+			if (token == "SYSTEM_RETURN_BANKNOTE")
+			{
+				cout << "Take the money back, no change\n";
 			}
 		}
 	}

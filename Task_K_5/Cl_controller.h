@@ -6,6 +6,10 @@
 class Cl_controller :
 	public Cl_base
 {
+private:
+	size_t currentReceivedMoney = 0;
+	size_t currentCoffeePrice = 0;
+
 public:
 
 	Cl_controller(string objectName, Cl_base* parentPtr) :
@@ -14,7 +18,7 @@ public:
 
 	void signal_v(string path, string message) override
 	{
-		cout << '\n' << "Signal from " << path;
+		return;
 	}
 
 	void handler_v(string path, string message) override
@@ -24,15 +28,36 @@ public:
 		{
 			string token = message.substr(0, message.find(' ') + 1);
 			message.erase(0, message.find(' ') + 1);
-			if (token == "Coffe")
-			{
-				this->realizeEmit("SYSTEM_COFFE " + message);
-			}
-			else if (token == "Refund")
-			{
 
+			if (token == "Coffee")
+			{
+				this->realizeEmit("SYSTEM_GET_PRICE " + message);
 			}
 
+			if (token == "SYSTEM_RECIVE_PRICE")
+			{
+				currentReceivedMoney = stoi(message);
+				this->realizeEmit("SYSTEM_GET_BALANCE " + message);
+			}
+
+			if (token == "SYSTEM_RECIVE_BALANCE")
+			{
+				currentCoffeePrice = stoi(message);
+				if (currentCoffeePrice < currentReceivedMoney)
+				{
+					this->realizeEmit("SYSTEM_COFFEE " + message);
+				}
+				else
+				{
+					cout << "There is not enough money\n";
+				}
+				
+			}
+
+			if (token == "Refund")
+			{
+				this->realizeEmit("SYSTEM_REFUND");
+			}
 		}
 	}
 

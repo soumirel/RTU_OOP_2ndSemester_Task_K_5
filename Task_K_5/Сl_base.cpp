@@ -144,15 +144,13 @@ void Cl_base::emitSignal(TYPE_SIGNAL signalPtr, string& message)
 	this->signal_v(absObjPath, message);
 	for (size_t iter = 0; iter < this->connections.size(); iter++)
 	{
-		if (this->connections.at(iter)->signalPtr == signalPtr)
+		if (this->connections.at(iter)->objectPtr->getReadiness())
 		{
-			if (this->connections.at(iter)->objectPtr->getReadiness())
-			{
-				this->handler_v(this->connections.at(iter)->objectPtr->getAbsPath(), message);
-			}
+			this->connections.at(iter)->objectPtr->handler_v(this->connections.at(iter)->objectPtr->getAbsPath(), message);
 		}
 	}
 }
+
 
 
 //Гетер родителя (указатель)
@@ -179,7 +177,7 @@ bool Cl_base::getReadiness()
 //Получить номер класса
 size_t Cl_base::getClassNumber()
 {
-	return 1;
+	return 0;
 }
 
 
@@ -296,7 +294,7 @@ Cl_base* Cl_base::getObjectByPath(string path)
 // Посредник установки связи между объектами
 void Cl_base::realizeConnection(Cl_base* firstObjectPtr, Cl_base* secondObjectPtr)
 {
-	switch (firstObjectPtr->getClassNumber())
+	switch (secondObjectPtr->getClassNumber())
 	{
 	case 1:
 		firstObjectPtr->setConnection(SIGNAL(Cl_coffeMachine::signal_v),
@@ -326,6 +324,10 @@ void Cl_base::realizeConnection(Cl_base* firstObjectPtr, Cl_base* secondObjectPt
 	case 6:
 		firstObjectPtr->setConnection(SIGNAL(Cl_coffemaker::signal_v),
 			(Cl_coffemaker*)secondObjectPtr, HANDLER(Cl_coffemaker::handler_v));
+		break;
+	case 7:
+		firstObjectPtr->setConnection(SIGNAL(Cl_screen::signal_v),
+			(Cl_screen*)secondObjectPtr, HANDLER(Cl_screen::handler_v));
 		break;
 	}
 }
@@ -375,7 +377,9 @@ void Cl_base::realizeEmit(string message)
 	case 6:
 		tempObjectPtr->emitSignal(SIGNAL(Cl_coffemaker::signal_v), message);
 		break;
-
+	case 7:
+		tempObjectPtr->emitSignal(SIGNAL(Cl_screen::signal_v), message);
+		break;
 	}
 
 }
@@ -384,7 +388,7 @@ void Cl_base::realizeEmit(string message)
 // Посредник удаления связи
 void Cl_base::removeConnection(Cl_base* firstObjectPtr, Cl_base* secondObjectPtr)
 {
-	switch (firstObjectPtr->getClassNumber())
+	switch (secondObjectPtr->getClassNumber())
 	{
 	case 1:
 		firstObjectPtr->deleteConnection(SIGNAL(Cl_coffeMachine::signal_v),

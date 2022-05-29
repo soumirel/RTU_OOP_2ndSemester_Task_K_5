@@ -27,6 +27,8 @@ public:
 
 	void handler_v(string path, string message) override;
 
+	size_t getClassNumber() override;
+
 	//Запуск этапа ввода для построения дерева
 	void buildTree();
 
