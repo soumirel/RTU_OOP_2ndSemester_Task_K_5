@@ -35,9 +35,29 @@ public:
 
 	void signal_v(string path, string message) override
 	{
-		cout << "Take the coffe " << message << "\nReady to work\n";
+		string token = message.substr(0, message.find(" ") + 1);
+
+		for (size_t i = 0; i < coffeInMachine.size(); i++)
+		{
+			if (token == coffeInMachine.at(i).name_)
+			{
+				cout << "Take the coffe " << message 
+					<< "\nReady to work\n";
+			}
+		}
 	}
 
+
+	size_t getPrice(string coffeeType)
+	{
+		for (size_t i = 0; i < coffeInMachine.size(); i++)
+		{
+			if (coffeeType == coffeInMachine.at(i).name_)
+			{
+				return coffeInMachine.at(i).price_;
+			}
+		}
+	}
 
 	void handler_v(string path, string message) override
 	{
@@ -66,6 +86,8 @@ public:
 			{
 				message.erase(0, message.find(" ") + 1);
 				this->realizeEmit(message);
+				this->realizeEmit("SYSTEM_CHANGE"
+					+ to_string(getPrice(message)));
 			}
 			else
 			{

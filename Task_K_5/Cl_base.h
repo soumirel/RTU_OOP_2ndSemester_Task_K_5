@@ -103,6 +103,9 @@ public:
 	// Вывод дерева объектов
 	void printTree(bool isPrintReadiness, unsigned tabLevel = 0);
 
+	//Функция для проверки строки на число
+	bool isNumber(string str);
+
 };
 
 #endif

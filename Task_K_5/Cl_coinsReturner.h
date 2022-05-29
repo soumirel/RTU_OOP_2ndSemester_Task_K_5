@@ -11,6 +11,9 @@ private:
 	size_t tennerNumber = 0;
 	size_t fiverNumber = 0;
 
+	//Кол-во денежных средств в автомате
+	size_t actualMoney = 0;
+
 public:
 
 	Cl_coinsReturner(string objectName, Cl_base* parentPtr) :
@@ -44,16 +47,16 @@ public:
 			if (token == "SYSTEM_CHANGE")
 			{
 				message.erase(0, message.find(" ") + 1);
-				size_t moneyToReturn = stoi(message);
+				size_t moneyToReturn = actualMoney - stoi(message);
 				size_t tennerToReturn = moneyToReturn / 10;
 				moneyToReturn /= 10;
 				size_t fiverToReturn = moneyToReturn;
+
 				this->realizeEmit(to_string(tennerToReturn) + to_string(fiverToReturn));
-				/*cout << "Take the change: 10 *  "
-					<< message.substr(0, message.find(" ") + 1);
-				message.erase(0, message.find(" ") + 1);
-				cout << " rub.,  5 * "
-					<< message.substr(0, message.find(" ") + 1) << " rub.\n";*/
+			}
+			else if (isNumber(token))
+			{
+				actualMoney = stoi(token);
 			}
 			else
 			{

@@ -1,5 +1,4 @@
 
-
 #include "Cl_coffeMachine.h"
 #include "Cl_console.h"
 #include "Cl_controller.h"
@@ -58,6 +57,8 @@ void Cl_coffeMachine::buildTree()
 	//Соединение логически связанных объектов
 	p_cashReceiverObject->realizeConnection(p_cashReceiverObject, p_screenObject);
 	p_controllerObject->realizeConnection(p_controllerObject, p_coffemakerObject);
+	p_coffemakerObject->realizeConnection(p_coffemakerObject, p_coinsReturner);
+	p_cashReceiverObject->realizeConnection(p_cashReceiverObject, p_coinsReturner);
 
 	return;
 }

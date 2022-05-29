@@ -486,3 +486,9 @@ Cl_base* Cl_base::getHeadPtr()
 
 	return p_tempObject;
 }
+
+
+bool Cl_base::isNumber(string str)
+{
+	return str.find_first_not_of("0123456789") == string::npos;
+}

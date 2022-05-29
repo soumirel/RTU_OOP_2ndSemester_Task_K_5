@@ -17,11 +17,23 @@ public:
 		cout << '\n' << "Signal from " << path;
 	}
 
-
 	void handler_v(string path, string message) override
 	{
-		cout << '\n' << "Signal to " << path
-			<< " Text: " << message << " (class: 3)";
+		if (this->getHeadPtr()->getStatusCoffeLoad() == true
+			&& this->getHeadPtr()->getStatusCoinsLoad() == true)
+		{
+			string token = message.substr(0, message.find(' ') + 1);
+			message.erase(0, message.find(' ') + 1);
+			if (token == "Coffe")
+			{
+				this->realizeEmit("SYSTEM_COFFE" + message);
+			}
+			else if (token == "Refund")
+			{
+
+			}
+
+		}
 	}
 
 
