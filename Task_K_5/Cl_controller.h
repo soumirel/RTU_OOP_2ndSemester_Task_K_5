@@ -33,33 +33,32 @@ public:
 			if (token == "Coffee")
 			{
 				currentCoffeeType = message;
-				this->realizeEmit("SYSTEM_GET_PRICE " + message);
-			}
-
-			if (token == "SYSTEM_RECEIVE_PRICE")
-			{
-				currentCoffeePrice = stoi(message);
-				this->realizeEmit("SYSTEM_GET_BALANCE " + message);
-			}
-
-			if (token == "SYSTEM_RECEIVE_BALANCE")
-			{
-				currentReceivedMoney = stoi(message);
-				if (currentCoffeePrice <= currentReceivedMoney)
-				{
-					this->realizeEmit("SYSTEM_COFFEE " + currentCoffeeType);
-					this->realizeEmit("SYSTEM_REDUCE_BALANCE " + to_string(currentCoffeePrice));
-				}
-				else
-				{
-					cout << "There is not enough money\n";
-				}
-				
+				this->realizeEmit("CONTROLLER:COFFEEMAKER_GETPRICE " + message);
 			}
 
 			if (token == "Refund")
 			{
-				this->realizeEmit("SYSTEM_REFUND");
+				this->realizeEmit("CONTOLLER:COINSRETURNER_REFUND");
+			}
+
+			if (token == "COFFEEMAKER:CONTROLLER_GIVEPRICE")
+			{
+				currentCoffeePrice = stoi(message);
+				this->realizeEmit("CONTROLLER:COINSRETURNER_GETBALANCE " + message);
+			}
+
+			if (token == "COINSRETURNER:CONTROLLER_GIVEBALANCE")
+			{
+				currentReceivedMoney = stoi(message);
+				if (currentCoffeePrice <= currentReceivedMoney)
+				{
+					this->realizeEmit("CONTROLLER:COFFEEMAKER_MAKECOFFEE " + currentCoffeeType);
+				}
+				else
+				{
+					this->realizeEmit("COINSRETURNER:SCREEN_MESSAGE There is not enough money");
+				}
+				
 			}
 		}
 	}

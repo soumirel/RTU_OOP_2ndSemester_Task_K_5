@@ -17,7 +17,7 @@ public:
 
 	void signal_v(string path, string message) override
 	{
-		return;
+		cout << message << '\n';
 	}
 
 
@@ -26,12 +26,24 @@ public:
 		if (this->getHeadPtr()->getStatusCoffeLoad() == true
 			&& this->getHeadPtr()->getStatusCoinsLoad() == true)
 		{
-			string token = message.substr(0, message.find(" "));
-			message.erase(0, message.find(" ") + 1);
+			size_t colonIndex = message.find(":");
+			size_t spaceIndex = message.find(" ");
+			string token = message.substr(colonIndex + 1, spaceIndex - colonIndex - 1);
+			message.erase(0, spaceIndex + 1);
 
-			if (token == "SYSTEM_SHOW_BALANCE")
+			if (token == "SCREEN_SAYTURNEDOFF")
 			{
-				cout << "The amount: " << message << '\n';
+				this->realizeEmit("Turned off");
+			}
+
+			if (token == "SCREEN_SAYREADY")
+			{
+				this->realizeEmit("Ready to work");
+			}
+
+			if (token == "SCREEN_MESSAGE")
+			{
+				this->realizeEmit(message);
 			}
 		}
 	}

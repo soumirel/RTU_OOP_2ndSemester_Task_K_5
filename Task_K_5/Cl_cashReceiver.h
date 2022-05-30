@@ -39,12 +39,12 @@ public:
 			
 			if (isNumber(message) == true)
 			{
-				this->realizeEmit("SYSTEM_CHECK_COINS " + token);
+				this->realizeEmit("CASHRECEIVER:COINSRETURNER_CHECKCOINS " + token);
 			}
 
 			message.erase(0, message.find(" ") + 1);
 
-			if (token == "SYSTEM_RECEIVE")
+			if (token == "COINSRETURNER:CASHRECEIVER_GIVEBALANCE")
 			{
 				if (message == "0")
 				{
@@ -54,24 +54,20 @@ public:
 				{
 				cashInMachine += stoi(message);
 				}
-				this->realizeEmit("SYSTEM_SHOW_BALANCE " + to_string(cashInMachine));
+				this->realizeEmit("CASHRECEIVER:SCREEN_MESSAGE The amount:" + to_string(cashInMachine));
 			}
 
-			if (token == "SYSTEM_RETURN_BANKNOTE")
+			if (token == "COINSRETURNER:CASHRECEIVER_RETURNBANKNOTE")
 			{
-				cout << "Take the money back, no change\n";
+				this->realizeEmit("COINSRETURNER:SCREEN_MESSAGE Take the money back, no change");
 			}
 
-			if (token == "SYSTEM_REDUCE_BALANCE_1")
+			if (token == "COINSRETURNER:CASHRECEIVER_CLEARBALANCE")
 			{
-				cashInMachine -= stoi(message);
+				cashInMachine = 0;
 			}
 		}
 	}
-
-
-	
-
 
 	size_t getClassNumber()
 	{

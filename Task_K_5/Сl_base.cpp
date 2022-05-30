@@ -136,7 +136,7 @@ void Cl_base::deleteConnection(TYPE_SIGNAL signalPtr, Cl_base* objectPtr, TYPE_H
 // Запуск обработки сигнала
 void Cl_base::emitSignal(TYPE_SIGNAL signalPtr, string& message)
 {
-	if (this->connections.empty() || this->getReadiness() == false)
+	if (this->getReadiness() == false)
 	{
 		return;
 	}

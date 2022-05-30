@@ -11,6 +11,10 @@ private:
 	size_t tennerNumber = 0;
 	size_t fiverNumber = 0;
 
+	//Переменные для расчёта количества возвращаемых монет
+	size_t tennerToReturn = 0;
+	size_t fiverToReturn = 0;
+
 	//Кол-во денежных средств в автомате
 	size_t actualMoney = 0;
 
@@ -24,16 +28,17 @@ public:
 	{
 		string token = message.substr(0, message.find(" "));
 		message.erase(0, message.find(" ") + 1);
+
 		if ((isNumber(token) == false) || (isNumber(message) == false))
 		{
 			return;
 		}
 
-		cout << "Take the change: 10 * " 
-			<< token;
+		string sentMessage = "Take the change: 10 * " + token;
 		message.erase(0, message.find(" ") + 1);
-		cout << " rub.,  5 * "
-			<< message.substr(0, message.find(" ")) << " rub.\n";
+		sentMessage += " rub.,  5 * " + message.substr(0, message.find(" ")) + " rub";
+
+		this->realizeEmit("COINSRETURNER:SCREEN_MESSAGE " + sentMessage);
 	}
 
 
@@ -45,89 +50,84 @@ public:
 			fiverNumber = stoi(message.substr(0, message.find(" ") + 1));
 			message.erase(0, message.find(" "));
 			tennerNumber = stoi(message.substr(0, message.size()));
+
 			this->getHeadPtr()->setStatusCoinsLoad(true);
-			cout << "Ready to work\n";
+
+			this->realizeEmit("COINSRETURNER:SCREEN_SAYREADY");
 		} 
-		else if (this->getHeadPtr()->getStatusCoffeLoad() == true 
-			&& this->getHeadPtr()->getStatusCoinsLoad() == true)
+		else if ((this->getHeadPtr()->getStatusCoffeLoad() == true) && (this->getHeadPtr()->getStatusCoinsLoad() == true))
 		{
 			string token = message.substr(0, message.find(" "));
 			message.erase(0, message.find(" ") + 1);
 
-			if (token == "SYSTEM_CHANGE")
+			if (token == "COFFEEMAKER:COINSRETURNER_GIVECHANGE" || token == "CONTOLLER:COINSRETURNER_REFUND")
 			{
-				size_t moneyToReturn = actualMoney - stoi(message);
-				size_t tennerToReturn = moneyToReturn / 10;
-				size_t fiverToReturn = moneyToReturn % 10;
-				tennerNumber -= tennerToReturn;
-				fiverNumber -= fiverToReturn;
-				this->realizeEmit(to_string(tennerToReturn) + " " + to_string(fiverToReturn));
-			}
-
-			if (token == "SYSTEM_REFUND")
-			{
-				size_t moneyToReturn = actualMoney;
-				size_t tennerToReturn = moneyToReturn / 10;
-				size_t fiverToReturn = moneyToReturn % 10;
-				tennerNumber -= tennerToReturn;
-				fiverNumber -= fiverToReturn;
-				this->realizeEmit(to_string(tennerToReturn) + " " + to_string(fiverToReturn));
+				size_t moneyToReturn = 0;
+				if (token == "COFFEEMAKER:COINSRETURNER_GIVECHANGE")
+				{
+					moneyToReturn = actualMoney - stoi(message);
+				}
+				else
+				{
+					moneyToReturn = actualMoney;
+				}
+				
 				actualMoney = 0;
-				this->realizeEmit("SYSTEM_RECEIVE 0");
+
+				while (tennerNumber > 0 && moneyToReturn >= 10)
+				{
+					tennerNumber--;
+					tennerToReturn++;
+					moneyToReturn -= 10;
+				}
+
+				fiverToReturn = moneyToReturn / 5;
+				fiverNumber -= fiverToReturn;
+				
+				if (fiverToReturn != 0 || tennerToReturn != 0)
+				{
+					this->realizeEmit(to_string(tennerToReturn) + " " + to_string(fiverToReturn));
+				}
+				
+				tennerToReturn = 0;
+				fiverToReturn = 0;
+
+				this->realizeEmit("COINSRETURNER:CASHRECEIVER_CLEARBALANCE");
 			}
 
-			if (token == "SYSTEM_CHECK_COINS")
+			if (token == "CASHRECEIVER:COINSRETURNER_CHECKCOINS")
 			{
+				tennerToReturn = 0;
+				fiverToReturn = 0;
+
 				size_t receivedMoney = stoi(message);
 
 				if (receivedMoney == 10 || receivedMoney == 5)
 				{
-					if (receivedMoney == 10)
-					{
-						tennerNumber += 1;
-					}
-					else
-					{
-						fiverNumber += 1;
-					}
-
 					actualMoney += receivedMoney;
-					this->realizeEmit("SYSTEM_RECEIVE " + to_string(receivedMoney));
+					this->realizeEmit("COINSRETURNER:CASHRECEIVER_GIVEBALANCE " + to_string(receivedMoney));
 				}
 				
 				if (receivedMoney == 50 || receivedMoney == 100)
 				{
-					receivedMoney += actualMoney;
-					size_t necessaryTenner = receivedMoney / 10;
-					size_t neccessaryFiver = receivedMoney % 10;
-					if (necessaryTenner <= tennerNumber && neccessaryFiver <= fiverNumber)
+					size_t moneyToReturn = actualMoney + receivedMoney;
+
+					if (fiverNumber * 5 + tennerNumber * 10 >= moneyToReturn)
 					{
-						if (receivedMoney == 0)
-						{
-							actualMoney = receivedMoney;
-						}
-						else
-						{
-							actualMoney += receivedMoney;
-						}
-						this->realizeEmit("SYSTEM_RECEIVE " + to_string(receivedMoney));
+						this->realizeEmit("COINSRETURNER:CASHRECEIVER_GIVEBALANCE " + to_string(receivedMoney));
+
+						actualMoney += receivedMoney;
 					}
 					else
 					{
-						this->realizeEmit("SYSTEM_RETURN_BANKNOTE");
+						this->realizeEmit("COINSRETURNER:CASHRECEIVER_RETURNBANKNOTE");
 					}
 				}
 			}
 
-			if (token == "SYSTEM_GET_BALANCE")
+			if (token == "CONTROLLER:COINSRETURNER_GETBALANCE")
 			{
-				this->realizeEmit("SYSTEM_RECEIVE_BALANCE " + to_string(actualMoney));
-			}
-
-			if (token == "SYSTEM_REDUCE_BALANCE")
-			{
-				actualMoney -= stoi(message);
-				this->realizeEmit("SYSTEM_REDUCE_BALANCE_1 " + message);
+				this->realizeEmit("COINSRETURNER:CONTROLLER_GIVEBALANCE " + to_string(actualMoney));
 			}
 		}
 	}

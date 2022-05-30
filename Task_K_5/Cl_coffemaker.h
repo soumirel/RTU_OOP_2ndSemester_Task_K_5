@@ -50,14 +50,10 @@ public:
 		{
 			if (token == coffeeInMachine.at(i).name_)
 			{
-				cout << "Take the coffe " << message << '\n';
+				string sentMessage = "Take the coffee " + message;
+				this->realizeEmit("COINSRETURNER:SCREEN_MESSAGE " + sentMessage);
 				return;
 			}
-		}
-
-		if (token == "SYSTEM_SAY_READY")
-		{
-			cout << "Ready to work\n";
 		}
 	}
 
@@ -118,17 +114,17 @@ public:
 			string token = message.substr(0, message.find(" "));
 			message.erase(0, message.find(" ") + 1);
 
-			if (token == "SYSTEM_COFFEE")
+			if (token == "CONTROLLER:COFFEEMAKER_MAKECOFFEE")
 			{
 				
 				this->realizeEmit(message.substr(0, message.find(" ")));
-				this->realizeEmit("SYSTEM_CHANGE " + to_string(getPrice(message)));
-				this->realizeEmit("SYSTEM_SAY_READY");
+				this->realizeEmit("COFFEEMAKER:COINSRETURNER_GIVECHANGE " + to_string(getPrice(message)));
+				this->realizeEmit("COFFEMAKER:SCREEN_SAYREADY");
 			}
 			
-			if (token == "SYSTEM_GET_PRICE")
+			if (token == "CONTROLLER:COFFEEMAKER_GETPRICE")
 			{
-				this->realizeEmit("SYSTEM_RECEIVE_PRICE " + to_string(getPrice(message)));
+				this->realizeEmit("COFFEEMAKER:CONTROLLER_GIVEPRICE " + to_string(getPrice(message)));
 			}
 		}
 	}

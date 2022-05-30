@@ -20,21 +20,24 @@ public:
 
 	void handler_v(string path, string message) override
 	{
-		if (message == "SYSTEM_START")
+		if (message == "MACHINE:CONSOLE_START")
 		{
 			string currentCommand = "";
 			do
 			{
 				getline(cin, currentCommand);
 
-				/*if (currentCommand == "Coffee Espresso")
+				/*if (currentCommand == "50")
 				{
-					cout << "check!";
+					cout << "check\n";
 				}*/
 
 				this->realizeEmit(currentCommand);
+				
 			} while (currentCommand != "Cancel");
 		}
+
+		this->realizeEmit("CONSOLE:SCREEN_SAYTURNEDOFF");
 	}
 
 

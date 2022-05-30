@@ -54,22 +54,29 @@ void Cl_coffeMachine::buildTree()
 			p_consoleObject , this->childrenList.at(i));
 	}
 
-	//Соединение логически связанных объектов
-	p_cashReceiverObject->realizeConnection(p_cashReceiverObject, p_screenObject);
+	//Связка всех объектов с экраном для вывода сообщений
+	for (size_t i = 0; i < this->childrenList.size() - 1; i++)
+	{
+		this->childrenList.at(i)->realizeConnection(
+			this->childrenList.at(i), p_screenObject);
+	}
 
+	//Соединение логически связанных объектов
 	p_controllerObject->realizeConnection(p_controllerObject, p_coinsReturner);
 
 	p_controllerObject->realizeConnection(p_controllerObject, p_coffemakerObject);
 
-	p_coffemakerObject->realizeConnection(p_coffemakerObject, p_coinsReturner);
+	p_cashReceiverObject->realizeConnection(p_cashReceiverObject, p_screenObject);
 
 	p_cashReceiverObject->realizeConnection(p_cashReceiverObject, p_coinsReturner);
 
 	p_coinsReturner->realizeConnection(p_coinsReturner, p_cashReceiverObject);
 
-	p_coffemakerObject->realizeConnection(p_coffemakerObject, p_controllerObject);
-
 	p_coinsReturner->realizeConnection(p_coinsReturner, p_controllerObject);
+
+	p_coffemakerObject->realizeConnection(p_coffemakerObject, p_coinsReturner);
+
+	p_coffemakerObject->realizeConnection(p_coffemakerObject, p_controllerObject);
 
 	return;
 }
@@ -243,7 +250,7 @@ int Cl_coffeMachine::runMachine()
 {
 	this->setReadiness(1);
 
-	this->realizeEmit("SYSTEM_START");
+	this->realizeEmit("MACHINE:CONSOLE_START");
 
 	return 0;
 }
