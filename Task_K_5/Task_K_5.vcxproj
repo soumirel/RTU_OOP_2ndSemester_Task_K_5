@@ -145,7 +145,7 @@
     <ClInclude Include="Cl_controller.h" />
     <ClInclude Include="Cl_cashReceiver.h" />
     <ClInclude Include="Cl_coinsReturner.h" />
-    <ClInclude Include="Cl_coffemaker.h" />
+    <ClInclude Include="Cl_coffeemaker.h" />
     <ClInclude Include="Cl_screen.h" />
   </ItemGroup>
   <ItemGroup>

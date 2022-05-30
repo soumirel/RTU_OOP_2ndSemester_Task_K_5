@@ -26,17 +26,28 @@ public:
 
 	void signal_v(string path, string message) override
 	{
-		string token = message.substr(0, message.find(" "));
+		string label = message.substr(0, message.find(" "));
 		message.erase(0, message.find(" ") + 1);
 
-		if ((isNumber(token) == false) || (isNumber(message) == false))
+		if (label != "COINSRETURNER_CHANGE" && label != "COINSRETURNER_REFUND")
 		{
 			return;
 		}
 
-		string sentMessage = "Take the change: 10 * " + token;
+		string sentMessage;
+		string token = message.substr(0, message.find(" "));
+
+		if (label == "COINSRETURNER_CHANGE")
+		{
+			sentMessage = "Take the change: 10 * " + token;
+		}
+		else
+		{
+			sentMessage = "Take the money: 10 * " + token;
+		}
+
 		message.erase(0, message.find(" ") + 1);
-		sentMessage += " rub.,  5 * " + message.substr(0, message.find(" ")) + " rub";
+		sentMessage += " rub.,  5 * " + message.substr(0, message.find(" ")) + " rub.";
 
 		this->realizeEmit("COINSRETURNER:SCREEN_MESSAGE " + sentMessage);
 	}
@@ -54,7 +65,7 @@ public:
 			this->getHeadPtr()->setStatusCoinsLoad(true);
 
 			this->realizeEmit("COINSRETURNER:SCREEN_SAYREADY");
-		} 
+		}
 		else if ((this->getHeadPtr()->getStatusCoffeLoad() == true) && (this->getHeadPtr()->getStatusCoinsLoad() == true))
 		{
 			string token = message.substr(0, message.find(" "));
@@ -71,7 +82,7 @@ public:
 				{
 					moneyToReturn = actualMoney;
 				}
-				
+
 				actualMoney = 0;
 
 				while (tennerNumber > 0 && moneyToReturn >= 10)
@@ -83,12 +94,19 @@ public:
 
 				fiverToReturn = moneyToReturn / 5;
 				fiverNumber -= fiverToReturn;
-				
+
 				if (fiverToReturn != 0 || tennerToReturn != 0)
 				{
-					this->realizeEmit(to_string(tennerToReturn) + " " + to_string(fiverToReturn));
+					if (token == "COFFEEMAKER:COINSRETURNER_GIVECHANGE")
+					{
+						this->realizeEmit("COINSRETURNER_CHANGE " + to_string(tennerToReturn) + " " + to_string(fiverToReturn));
+					}
+					else
+					{
+						this->realizeEmit("COINSRETURNER_REFUND " + to_string(tennerToReturn) + " " + to_string(fiverToReturn));
+					}
 				}
-				
+
 				tennerToReturn = 0;
 				fiverToReturn = 0;
 
@@ -107,7 +125,7 @@ public:
 					actualMoney += receivedMoney;
 					this->realizeEmit("COINSRETURNER:CASHRECEIVER_GIVEBALANCE " + to_string(receivedMoney));
 				}
-				
+
 				if (receivedMoney == 50 || receivedMoney == 100)
 				{
 					size_t moneyToReturn = actualMoney + receivedMoney;

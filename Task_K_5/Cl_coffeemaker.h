@@ -4,7 +4,7 @@
 #include "Cl_base.h"
 #include "Cl_coffeeMachine.h"
 
-class Cl_coffemaker :
+class Cl_coffeemaker :
 	public Cl_base
 {
 private:
@@ -29,7 +29,7 @@ private:
 
 public:
 
-	Cl_coffemaker(string objectName, Cl_base* parentPtr) :
+	Cl_coffeemaker(string objectName, Cl_base* parentPtr) :
 		Cl_base(objectName, parentPtr) {};
 
 

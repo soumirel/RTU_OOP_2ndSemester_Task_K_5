@@ -5,7 +5,7 @@
 #include "Cl_controller.h"
 #include "Cl_cashReceiver.h"
 #include "Cl_coinsReturner.h"
-#include "Cl_coffemaker.h"
+#include "Cl_coffeemaker.h"
 #include "Cl_screen.h"
 
 
@@ -322,8 +322,8 @@ void Cl_base::realizeConnection(Cl_base* firstObjectPtr, Cl_base* secondObjectPt
 		break;
 
 	case 6:
-		firstObjectPtr->setConnection(SIGNAL(Cl_coffemaker::signal_v),
-			(Cl_coffemaker*)secondObjectPtr, HANDLER(Cl_coffemaker::handler_v));
+		firstObjectPtr->setConnection(SIGNAL(Cl_coffeemaker::signal_v),
+			(Cl_coffeemaker*)secondObjectPtr, HANDLER(Cl_coffeemaker::handler_v));
 		break;
 	case 7:
 		firstObjectPtr->setConnection(SIGNAL(Cl_screen::signal_v),
@@ -375,7 +375,7 @@ void Cl_base::realizeEmit(string message)
 		break;
 
 	case 6:
-		tempObjectPtr->emitSignal(SIGNAL(Cl_coffemaker::signal_v), message);
+		tempObjectPtr->emitSignal(SIGNAL(Cl_coffeemaker::signal_v), message);
 		break;
 	case 7:
 		tempObjectPtr->emitSignal(SIGNAL(Cl_screen::signal_v), message);
@@ -416,8 +416,8 @@ void Cl_base::removeConnection(Cl_base* firstObjectPtr, Cl_base* secondObjectPtr
 		break;
 
 	case 6:
-		firstObjectPtr->deleteConnection(SIGNAL(Cl_coffemaker::signal_v),
-			(Cl_coffemaker*)secondObjectPtr, HANDLER(Cl_coffemaker::handler_v));
+		firstObjectPtr->deleteConnection(SIGNAL(Cl_coffeemaker::signal_v),
+			(Cl_coffeemaker*)secondObjectPtr, HANDLER(Cl_coffeemaker::handler_v));
 		break;
 	}
 }

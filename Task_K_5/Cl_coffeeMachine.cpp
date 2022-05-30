@@ -4,7 +4,7 @@
 #include "Cl_controller.h"
 #include "Cl_cashReceiver.h"
 #include "Cl_coinsReturner.h"
-#include "Cl_coffemaker.h"
+#include "Cl_coffeemaker.h"
 #include "Cl_screen.h"
 
 
@@ -40,7 +40,7 @@ void Cl_coffeeMachine::buildTree()
 
 	Cl_base* p_coinsReturner = new Cl_coinsReturner("coinsReturner", this);
 
-	Cl_base* p_coffemakerObject = new Cl_coffemaker("coffemakerObject", this);
+	Cl_base* p_coffemakerObject = new Cl_coffeemaker("coffemakerObject", this);
 
 	Cl_base* p_screenObject = new Cl_screen("screenObject", this);
 

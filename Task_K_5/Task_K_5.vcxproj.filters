@@ -30,7 +30,7 @@
     <ClInclude Include="Cl_coinsReturner.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="Cl_coffemaker.h">
+    <ClInclude Include="Cl_coffeemaker.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="Cl_console.h">
