@@ -36,12 +36,13 @@ public:
 			{
 				token = message.substr(0, message.find(" "));
 			}
-			message.erase(0, message.find(" ") + 1);
-
-			if (isNumber(token) == true)
+			
+			if (isNumber(message) == true)
 			{
 				this->realizeEmit("SYSTEM_CHECK_COINS " + token);
 			}
+
+			message.erase(0, message.find(" ") + 1);
 
 			if (token == "SYSTEM_RECEIVE")
 			{
@@ -59,6 +60,11 @@ public:
 			if (token == "SYSTEM_RETURN_BANKNOTE")
 			{
 				cout << "Take the money back, no change\n";
+			}
+
+			if (token == "SYSTEM_REDUCE_BALANCE_1")
+			{
+				cashInMachine -= stoi(message);
 			}
 		}
 	}

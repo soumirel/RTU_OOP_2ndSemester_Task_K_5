@@ -35,15 +35,29 @@ public:
 
 	void signal_v(string path, string message) override
 	{
-		string token = message.substr(0, message.find(" ") + 1);
+		string token = "";
+
+		if (message.find(" ") == string::npos)
+		{
+			token = message;
+		}
+		else
+		{
+			token = message.substr(0, message.find(" "));
+		}
 
 		for (size_t i = 0; i < coffeeInMachine.size(); i++)
 		{
 			if (token == coffeeInMachine.at(i).name_)
 			{
-				cout << "Take the coffe " << message 
-					<< "\nReady to work\n";
+				cout << "Take the coffe " << message << '\n';
+				return;
 			}
+		}
+
+		if (token == "SYSTEM_SAY_READY")
+		{
+			cout << "Ready to work\n";
 		}
 	}
 
@@ -101,19 +115,20 @@ public:
 		if (this->getHeadPtr()->getStatusCoffeLoad() == true
 			&& this->getHeadPtr()->getStatusCoinsLoad() == true)
 		{
-			string token = message.substr(0, message.find(" ") + 1);
+			string token = message.substr(0, message.find(" "));
 			message.erase(0, message.find(" ") + 1);
 
 			if (token == "SYSTEM_COFFEE")
 			{
 				
-				this->realizeEmit(message);
+				this->realizeEmit(message.substr(0, message.find(" ")));
 				this->realizeEmit("SYSTEM_CHANGE " + to_string(getPrice(message)));
+				this->realizeEmit("SYSTEM_SAY_READY");
 			}
 			
 			if (token == "SYSTEM_GET_PRICE")
 			{
-				this->realizeEmit("SYSTEM_RECIVE_PRICE " + to_string(getPrice(message)));
+				this->realizeEmit("SYSTEM_RECEIVE_PRICE " + to_string(getPrice(message)));
 			}
 		}
 	}

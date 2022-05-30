@@ -69,7 +69,7 @@ void Cl_coffeMachine::buildTree()
 
 	p_coffemakerObject->realizeConnection(p_coffemakerObject, p_controllerObject);
 
-	p_coinsReturner->removeConnection(p_coinsReturner, p_controllerObject);
+	p_coinsReturner->realizeConnection(p_coinsReturner, p_controllerObject);
 
 	return;
 }

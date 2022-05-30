@@ -29,11 +29,11 @@ public:
 			return;
 		}
 
-		cout << "Take the change: 10 *  " 
-			<< message.substr(0, message.find(" ") + 1);
+		cout << "Take the change: 10 * " 
+			<< token;
 		message.erase(0, message.find(" ") + 1);
 		cout << " rub.,  5 * "
-			<< message.substr(0, message.find(" ") + 1) << " rub.\n";
+			<< message.substr(0, message.find(" ")) << " rub.\n";
 	}
 
 
@@ -56,16 +56,22 @@ public:
 
 			if (token == "SYSTEM_CHANGE")
 			{
-				
 				size_t moneyToReturn = actualMoney - stoi(message);
 				size_t tennerToReturn = moneyToReturn / 10;
 				size_t fiverToReturn = moneyToReturn % 10;
-				this->realizeEmit(to_string(tennerToReturn) + to_string(fiverToReturn));
+				tennerNumber -= tennerToReturn;
+				fiverNumber -= fiverToReturn;
+				this->realizeEmit(to_string(tennerToReturn) + " " + to_string(fiverToReturn));
 			}
 
 			if (token == "SYSTEM_REFUND")
 			{
-				cout << "Take the money back, no change\n";
+				size_t moneyToReturn = actualMoney;
+				size_t tennerToReturn = moneyToReturn / 10;
+				size_t fiverToReturn = moneyToReturn % 10;
+				tennerNumber -= tennerToReturn;
+				fiverNumber -= fiverToReturn;
+				this->realizeEmit(to_string(tennerToReturn) + " " + to_string(fiverToReturn));
 				actualMoney = 0;
 				this->realizeEmit("SYSTEM_RECEIVE 0");
 			}
@@ -73,30 +79,55 @@ public:
 			if (token == "SYSTEM_CHECK_COINS")
 			{
 				size_t receivedMoney = stoi(message);
-				size_t necessaryTenner = receivedMoney / 10;
-				size_t neccessaryFiver = receivedMoney % 10;
-				if (necessaryTenner <= tennerNumber && neccessaryFiver <= fiverNumber)
+
+				if (receivedMoney == 10 || receivedMoney == 5)
 				{
-					if (receivedMoney == 0)
+					if (receivedMoney == 10)
 					{
-						actualMoney = receivedMoney;
+						tennerNumber += 1;
 					}
 					else
 					{
-						actualMoney += receivedMoney;
+						fiverNumber += 1;
 					}
-		
+
+					actualMoney += receivedMoney;
 					this->realizeEmit("SYSTEM_RECEIVE " + to_string(receivedMoney));
 				}
-				else
+				
+				if (receivedMoney == 50 || receivedMoney == 100)
 				{
-					this->realizeEmit("SYSTEM_RETURN_BANKNOTE");
+					receivedMoney += actualMoney;
+					size_t necessaryTenner = receivedMoney / 10;
+					size_t neccessaryFiver = receivedMoney % 10;
+					if (necessaryTenner <= tennerNumber && neccessaryFiver <= fiverNumber)
+					{
+						if (receivedMoney == 0)
+						{
+							actualMoney = receivedMoney;
+						}
+						else
+						{
+							actualMoney += receivedMoney;
+						}
+						this->realizeEmit("SYSTEM_RECEIVE " + to_string(receivedMoney));
+					}
+					else
+					{
+						this->realizeEmit("SYSTEM_RETURN_BANKNOTE");
+					}
 				}
 			}
 
 			if (token == "SYSTEM_GET_BALANCE")
 			{
-				this->realizeEmit("SYSTEM_RECIVE_BALANCE " + to_string(actualMoney));
+				this->realizeEmit("SYSTEM_RECEIVE_BALANCE " + to_string(actualMoney));
+			}
+
+			if (token == "SYSTEM_REDUCE_BALANCE")
+			{
+				actualMoney -= stoi(message);
+				this->realizeEmit("SYSTEM_REDUCE_BALANCE_1 " + message);
 			}
 		}
 	}

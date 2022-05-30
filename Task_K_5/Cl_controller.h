@@ -9,6 +9,7 @@ class Cl_controller :
 private:
 	size_t currentReceivedMoney = 0;
 	size_t currentCoffeePrice = 0;
+	string currentCoffeeType = "";
 
 public:
 
@@ -26,26 +27,28 @@ public:
 		if (this->getHeadPtr()->getStatusCoffeLoad() == true
 			&& this->getHeadPtr()->getStatusCoinsLoad() == true)
 		{
-			string token = message.substr(0, message.find(' ') + 1);
+			string token = message.substr(0, message.find(' '));
 			message.erase(0, message.find(' ') + 1);
 
 			if (token == "Coffee")
 			{
+				currentCoffeeType = message;
 				this->realizeEmit("SYSTEM_GET_PRICE " + message);
 			}
 
-			if (token == "SYSTEM_RECIVE_PRICE")
+			if (token == "SYSTEM_RECEIVE_PRICE")
 			{
-				currentReceivedMoney = stoi(message);
+				currentCoffeePrice = stoi(message);
 				this->realizeEmit("SYSTEM_GET_BALANCE " + message);
 			}
 
-			if (token == "SYSTEM_RECIVE_BALANCE")
+			if (token == "SYSTEM_RECEIVE_BALANCE")
 			{
-				currentCoffeePrice = stoi(message);
-				if (currentCoffeePrice < currentReceivedMoney)
+				currentReceivedMoney = stoi(message);
+				if (currentCoffeePrice <= currentReceivedMoney)
 				{
-					this->realizeEmit("SYSTEM_COFFEE " + message);
+					this->realizeEmit("SYSTEM_COFFEE " + currentCoffeeType);
+					this->realizeEmit("SYSTEM_REDUCE_BALANCE " + to_string(currentCoffeePrice));
 				}
 				else
 				{

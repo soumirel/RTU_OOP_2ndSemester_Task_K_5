@@ -26,6 +26,12 @@ public:
 			do
 			{
 				getline(cin, currentCommand);
+
+				/*if (currentCommand == "Coffee Espresso")
+				{
+					cout << "check!";
+				}*/
+
 				this->realizeEmit(currentCommand);
 			} while (currentCommand != "Cancel");
 		}
