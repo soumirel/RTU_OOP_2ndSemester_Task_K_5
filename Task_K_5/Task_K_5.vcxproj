@@ -139,7 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Cl_coffeMachine.h" />
+    <ClInclude Include="Cl_coffeeMachine.h" />
     <ClInclude Include="Cl_base.h" />
     <ClInclude Include="Cl_console.h" />
     <ClInclude Include="Cl_controller.h" />
@@ -149,7 +149,7 @@
     <ClInclude Include="Cl_screen.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Cl_coffeMachine.cpp" />
+    <ClCompile Include="Cl_coffeeMachine.cpp" />
     <ClCompile Include="Сl_base.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>

@@ -1,5 +1,5 @@
 
-#include "Cl_coffeMachine.h"
+#include "Cl_coffeeMachine.h"
 #include "Cl_console.h"
 #include "Cl_controller.h"
 #include "Cl_cashReceiver.h"
@@ -8,28 +8,28 @@
 #include "Cl_screen.h"
 
 
-bool Cl_coffeMachine::getStatusCoffeLoad()
+bool Cl_coffeeMachine::getStatusCoffeLoad()
 {
 	return statusCoffeLoad;
 }
 
-bool Cl_coffeMachine::getStatusCoinsLoad()
+bool Cl_coffeeMachine::getStatusCoinsLoad()
 {
 	return statusCoinsLoad;
 }
 
-void Cl_coffeMachine::setStatusCoffeLoad(bool status)
+void Cl_coffeeMachine::setStatusCoffeLoad(bool status)
 {
 	this->statusCoffeLoad = status;
 }
 
-void Cl_coffeMachine::setStatusCoinsLoad(bool status)
+void Cl_coffeeMachine::setStatusCoinsLoad(bool status)
 {
 	this->statusCoinsLoad = status;
 }
 
 //Запуск этапа ввода для построения дерева
-void Cl_coffeMachine::buildTree()
+void Cl_coffeeMachine::buildTree()
 {
 	//Иннициализация объектов-компонентов кофемашины
 	Cl_base* p_consoleObject = new Cl_console("consoleObject", this);
@@ -83,7 +83,7 @@ void Cl_coffeMachine::buildTree()
 
 
 //Запуск этапа ввода для установки готовностей объектов
-void Cl_coffeMachine::enterReadiness()
+void Cl_coffeeMachine::enterReadiness()
 {
 	string objectName;
 	long long numericReadiness;
@@ -95,7 +95,7 @@ void Cl_coffeMachine::enterReadiness()
 
 
 //Запуск этапа ввода для установки связей между объектами
-void Cl_coffeMachine::enterConnections()
+void Cl_coffeeMachine::enterConnections()
 {
 	string signalPath, handlerPath;
 	cin >> signalPath;
@@ -114,7 +114,7 @@ void Cl_coffeMachine::enterConnections()
 
 
 //Запуск этапа ввода для осуществления манипуляций над объектами при помощи команд
-void Cl_coffeMachine::enterCommands()
+void Cl_coffeeMachine::enterCommands()
 {
 	Cl_base* setedObjectPtr = this;
 	Cl_base* objectFromPath;
@@ -230,23 +230,25 @@ void Cl_coffeMachine::enterCommands()
 }
 
 
-void Cl_coffeMachine::signal_v(string path, string message)
+void Cl_coffeeMachine::signal_v(string path, string message)
 {
+	return;
 }
 
 
-void Cl_coffeMachine::handler_v(string path, string message)
+void Cl_coffeeMachine::handler_v(string path, string message)
 {
+	return;
 }
 
-size_t Cl_coffeMachine::getClassNumber()
+size_t Cl_coffeeMachine::getClassNumber()
 {
 	return 1;
 }
 
 
 //Запуск объекта приложения
-int Cl_coffeMachine::runMachine()
+int Cl_coffeeMachine::runMachine()
 {
 	this->setReadiness(1);
 

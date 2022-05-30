@@ -3,7 +3,7 @@
 
 #include  "Cl_base.h"
 
-class Cl_coffeMachine : 
+class Cl_coffeeMachine : 
 	public Cl_base 
 {
 private:
@@ -13,7 +13,7 @@ private:
 
 public:
 	//Конструктор
-	Cl_coffeMachine(string objectName = "coffeMachineObject", Cl_base* parentPtr = nullptr) :
+	Cl_coffeeMachine(string objectName = "coffeMachineObject", Cl_base* parentPtr = nullptr) :
 		Cl_base(objectName, parentPtr) {};
 
 	//Геттеры и сеттеры статусов загрузки сдачи и кофе

@@ -1,6 +1,6 @@
 
 #include "Cl_base.h"
-#include "Cl_coffeMachine.h"
+#include "Cl_coffeeMachine.h"
 #include "Cl_console.h"
 #include "Cl_controller.h"
 #include "Cl_cashReceiver.h"
@@ -297,8 +297,8 @@ void Cl_base::realizeConnection(Cl_base* firstObjectPtr, Cl_base* secondObjectPt
 	switch (secondObjectPtr->getClassNumber())
 	{
 	case 1:
-		firstObjectPtr->setConnection(SIGNAL(Cl_coffeMachine::signal_v),
-			(Cl_base*)secondObjectPtr, HANDLER(Cl_coffeMachine::handler_v));
+		firstObjectPtr->setConnection(SIGNAL(Cl_coffeeMachine::signal_v),
+			(Cl_base*)secondObjectPtr, HANDLER(Cl_coffeeMachine::handler_v));
 		break;
 
 	case 2:
@@ -355,7 +355,7 @@ void Cl_base::realizeEmit(string message)
 	switch (tempObjectPtr->getClassNumber())
 	{
 	case 1:
-		tempObjectPtr->emitSignal(SIGNAL(Cl_coffeMachine::signal_v), message);
+		tempObjectPtr->emitSignal(SIGNAL(Cl_coffeeMachine::signal_v), message);
 		break;
 
 	case 2:
@@ -391,8 +391,8 @@ void Cl_base::removeConnection(Cl_base* firstObjectPtr, Cl_base* secondObjectPtr
 	switch (secondObjectPtr->getClassNumber())
 	{
 	case 1:
-		firstObjectPtr->deleteConnection(SIGNAL(Cl_coffeMachine::signal_v),
-			(Cl_base*)secondObjectPtr, HANDLER(Cl_coffeMachine::handler_v));
+		firstObjectPtr->deleteConnection(SIGNAL(Cl_coffeeMachine::signal_v),
+			(Cl_base*)secondObjectPtr, HANDLER(Cl_coffeeMachine::handler_v));
 		break;
 
 	case 2:
@@ -430,7 +430,7 @@ void Cl_base::printTree(bool isPrintReadiness, unsigned tabLevel)
 	// Метод отвеает сразу за вывод дерева и за вывод деерва с готовностями
 	// Что из двух деревьев выводить - зависит от isPrintReadiness
 
-	cout << '\n';
+	
 	//За вывод табуляции и ее длинны отвечает параметр tabLevel
 	for (unsigned i = 0; i < tabLevel; i++)
 	{
@@ -447,6 +447,7 @@ void Cl_base::printTree(bool isPrintReadiness, unsigned tabLevel)
 
 	for (size_t i = 0; i < childrenList.size(); i++)
 	{
+		cout << '\n';
 		//Рекурсивный вызов с увеличением значения уровня табуляции
 		childrenList[i]->printTree(isPrintReadiness, tabLevel + 1);
 	}
@@ -476,7 +477,6 @@ bool Cl_base::getStatusCoinsLoad()
 {
 	return false;
 }
-
 
 
 Cl_base* Cl_base::getHeadPtr()

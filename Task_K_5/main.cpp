@@ -1,8 +1,8 @@
-#include "Cl_coffeMachine.h"
+#include "Cl_coffeeMachine.h"
 
 int main()
 {
-	Cl_coffeMachine machineObject;
+	Cl_coffeeMachine machineObject;
 
 	//Построение системы объектов
 	machineObject.buildTree();

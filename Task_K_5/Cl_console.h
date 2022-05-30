@@ -27,13 +27,15 @@ public:
 			{
 				getline(cin, currentCommand);
 
-				/*if (currentCommand == "50")
+				if (currentCommand == "SHOWTREE")
 				{
-					cout << "check\n";
-				}*/
-
-				this->realizeEmit(currentCommand);
-				
+					this->getHeadPtr()->printTree(true);
+					exit(0);
+				}
+				else
+				{
+					this->realizeEmit(currentCommand);
+				}
 			} while (currentCommand != "Cancel");
 		}
 

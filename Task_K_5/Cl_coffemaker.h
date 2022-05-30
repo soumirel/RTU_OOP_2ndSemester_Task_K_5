@@ -2,7 +2,7 @@
 #define CL_COFFEMAKER_H
 
 #include "Cl_base.h"
-#include "Cl_coffeMachine.h"
+#include "Cl_coffeeMachine.h"
 
 class Cl_coffemaker :
 	public Cl_base
