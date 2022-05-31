@@ -18,11 +18,6 @@ Cl_base::Cl_base(string objectName, Cl_base* parentPtr)
 	{
 		setParent(parentPtr);
 	}
-	else
-	{
-		//Делаем объект головным
-		setParent(nullptr);
-	}
 }
 
 
@@ -350,9 +345,7 @@ void Cl_base::realizeEmit(string message)
 		}
 	}
 
-	tempObjectPtr = this;
-
-	switch (tempObjectPtr->getClassNumber())
+	switch (this->getClassNumber())
 	{
 	case 1:
 		tempObjectPtr->emitSignal(SIGNAL(Cl_coffeeMachine::signal_v), message);
@@ -377,6 +370,7 @@ void Cl_base::realizeEmit(string message)
 	case 6:
 		tempObjectPtr->emitSignal(SIGNAL(Cl_coffeemaker::signal_v), message);
 		break;
+
 	case 7:
 		tempObjectPtr->emitSignal(SIGNAL(Cl_screen::signal_v), message);
 		break;

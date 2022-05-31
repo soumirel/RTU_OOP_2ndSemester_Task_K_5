@@ -26,9 +26,9 @@ public:
 		if (this->getHeadPtr()->getStatusCoffeLoad() == true
 			&& this->getHeadPtr()->getStatusCoinsLoad() == true)
 		{
-			size_t delimeterPosotion = message.find(" ");
+			size_t delimeterPosition = message.find(" ");
 			string token = "";
-			if (delimeterPosotion == string::npos)
+			if (delimeterPosition == string::npos)
 			{
 				token = message;
 			}
@@ -48,11 +48,11 @@ public:
 			{
 				if (message == "0")
 				{
-				cashInMachine = stoi(message);
+					cashInMachine = stoi(message);
 				}
 				else
 				{
-				cashInMachine += stoi(message);
+					cashInMachine += stoi(message);
 				}
 				this->realizeEmit("CASHRECEIVER:SCREEN_MESSAGE The amount:" + to_string(cashInMachine));
 			}

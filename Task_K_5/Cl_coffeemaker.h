@@ -101,7 +101,7 @@ public:
 					coffeeInMachine.push_back(coffeeInfo(coffeeTypesNames.front(), stoi(token)));
 					coffeeTypesNames.erase(coffeeTypesNames.begin());
 				}
-				token = message.substr(0, message.size());
+				token = message;
 				coffeeInMachine.push_back(coffeeInfo(coffeeTypesNames.front(), stoi(token)));
 
 				this->getHeadPtr()->setStatusCoffeLoad(true);

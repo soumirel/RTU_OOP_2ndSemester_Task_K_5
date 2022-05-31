@@ -58,8 +58,8 @@ public:
 		if (this->getHeadPtr()->getStatusCoffeLoad() == true
 			&& this->getHeadPtr()->getStatusCoinsLoad() == false)
 		{
-			fiverNumber = stoi(message.substr(0, message.find(" ") + 1));
-			message.erase(0, message.find(" "));
+			fiverNumber = stoi(message.substr(0, message.find(" ")));
+			message.erase(0, message.find(" ") + 1);
 			tennerNumber = stoi(message.substr(0, message.size()));
 
 			this->getHeadPtr()->setStatusCoinsLoad(true);
